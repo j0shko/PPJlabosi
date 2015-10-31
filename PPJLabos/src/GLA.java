@@ -6,6 +6,16 @@ import java.util.Map;
 
 public class GLA {
 
+	public static String resolveRegex(Map<String, String> regexes, String regDef) {
+		String ans = new String(regDef);
+		for (String def : regexes.keySet()) {
+			if (ans.contains(def)) {
+				ans.replace(def, "(" + regexes.get(def));
+			}
+		}
+		return ans;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		Map<String, String> regexs = new HashMap<>();
 		Map<String, State> states = new HashMap<>();
@@ -48,10 +58,10 @@ public class GLA {
 		
 		// read LA rule
 		Rule currentRule = null;
-		while ((current = br.readLine()) != null) {
+		while (!(current = br.readLine()).isEmpty() && current != null) {
 			if (current.startsWith("<")) {
 				String stateName = current.split("<|>")[1];
-				String regex = current.substring(stateName.length() + 2);
+				String regex = resolveRegex(regexs, current.substring(stateName.length() + 2));
 				State currentState = states.get(stateName);
 				currentRule = currentState.addRule(regex);
 			} else if (current.startsWith("{")) {
@@ -62,13 +72,20 @@ public class GLA {
 				if (current.startsWith("UDJI_U_STANJE ")) {
 					String line[] = current.split("\\s");
 					currentRule.addAction(new EnterStateAction(states.get(line[1])));
-				}
-				if (current.startsWith("VRATI_SE ")) {
+				} else if (current.startsWith("VRATI_SE ")) {
 					String line[] = current.split("\\s");
 					currentRule.addAction(new ReturnAction(Integer.parseInt(line[1])));
+				} else if (current.equals("NOVI_REDAK")) {
+					currentRule.addAction(new NewLineAction());
+				} else if (current.equals("-")) {
+					// TODO: Odbaci
+				} else {
+					if (lexUnits.containsKey(current)) {
+						currentRule.addAction(lexUnits.get(current));
+					}
 				}
 			}
 		}
-	
+		System.out.println("test");
 	}
 }
