@@ -58,7 +58,7 @@ public class GLA {
 		
 		// read LA rule
 		Rule currentRule = null;
-		while (!(current = br.readLine()).isEmpty() && current != null) {
+		while ((current = br.readLine()) != null) {
 			if (current.startsWith("<")) {
 				String stateName = current.split("<|>")[1];
 				String regex = resolveRegex(regexs, current.substring(stateName.length() + 2));

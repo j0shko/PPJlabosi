@@ -47,6 +47,10 @@ public class AutomatRegex {
 		this.initialState = result[0];
 		this.acceptableState = result[1];
 	}
+	
+	public int getStateCount() {
+		return stateCount;
+	}
 
 	private State[] create(String regex) {
 		int bracketCount = 0;
