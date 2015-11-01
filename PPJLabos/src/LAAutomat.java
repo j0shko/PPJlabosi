@@ -25,5 +25,11 @@ public class LAAutomat implements Serializable {
 		states.add(state);
 	}
 	
+	public State getCurrentState() {
+		return currentState;
+	}
 	
+	public void setCurrentState(State state) {
+		currentState = state;
+	}
 }

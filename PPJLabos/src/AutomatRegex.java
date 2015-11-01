@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -5,9 +6,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class AutomatRegex {
+public class AutomatRegex implements Serializable{
 
-	public static class State {
+	private static final long serialVersionUID = 5176583674993659148L;
+
+	public static class State implements Serializable{
+		
+		private static final long serialVersionUID = -4346250414911753644L;
+		
 		private Set<State> epsilonTransits = new HashSet<>();
 		private Map<Character, List<State>> transits = new HashMap<>();
 

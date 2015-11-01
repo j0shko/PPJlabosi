@@ -1,22 +1,22 @@
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class State implements Serializable {
 
 	private static final long serialVersionUID = 365L;
 	private String name;
 	
-	private Map<String, Rule> rules;
+	private List<Rule> rules;
 	
 	public State(String name){
 		this.name = name;
-		rules = new HashMap<>();
+		rules = new ArrayList<>();
 	}
 	
 	public Rule addRule(String regex) {
 		Rule newRule = new Rule(regex);
-		rules.put(regex, newRule);
+		rules.add(newRule);
 		return newRule;
 	}
 
@@ -25,4 +25,7 @@ public class State implements Serializable {
 		return name.hashCode();
 	}
 
+	public List<Rule> getRules() {
+		return rules;
+	}
 }

@@ -13,4 +13,8 @@ public class Action implements Serializable {
 	public int hashCode() {
 		return name.hashCode();
 	}
+
+	public String getName() {
+		return name;
+	}
 }

@@ -32,7 +32,10 @@ public class Rule implements Serializable {
 		result = prime * result + ((actions == null) ? 0 : actions.hashCode());
 		result = prime * result + ((regex == null) ? 0 : regex.hashCode());
 		return result;
+	}
+
+	public List<Action> getActions() {
+		return actions;
 	}	
 	
 }
-

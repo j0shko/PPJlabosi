@@ -7,5 +7,9 @@ public class Unit extends Action implements Serializable {
 	public Unit(String name) {
 		super(name);
 	}
+
+	public String getName() {
+		return super.getName();
+	}
 	
 }

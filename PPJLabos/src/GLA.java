@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,13 +88,16 @@ public class GLA {
 				}
 			}
 		}
-		System.out.println("test");
-		
-		
 		// TODO malo uštimat da uzmem prvo stanje kao poèetno
 		LAAutomat automat = new LAAutomat(states.get("S_pocetno"));
 		for (State state : states.values()) {
 			automat.addState(state);
 		}
+		
+		FileOutputStream fileOut = new FileOutputStream("analizator/automat.ser");
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(automat);
+		out.close();
+		fileOut.close();
 	}
 }
