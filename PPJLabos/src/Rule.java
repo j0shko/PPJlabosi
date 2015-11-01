@@ -2,22 +2,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rule implements Serializable {
+public class Rule extends AutomatRegex implements Serializable {
 
 	private static final long serialVersionUID = 4055L;
 	private String regex;
 	private List<Action> actions;
 	
-	private AutomatRegex regexAut;
+	//private AutomatRegex regexAut;
 	
 	public Rule(String regex) {
+		super(regex);
 		this.regex = regex;
-		regexAut = new AutomatRegex(regex);
+		//regexAut = new AutomatRegex(regex);
 		actions = new ArrayList<>();
 	}
 	
 	public boolean accepts(String string) {
-		return regexAut.accepts(string);
+		return super.accepts(string);
 	}
 	
 	public Rule addAction(Action action) {
@@ -38,4 +39,5 @@ public class Rule implements Serializable {
 		return actions;
 	}	
 	
+	//----------------------
 }

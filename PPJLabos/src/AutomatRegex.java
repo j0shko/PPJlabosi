@@ -45,6 +45,9 @@ public class AutomatRegex implements Serializable{
 	private int stateCount;
 	private State initialState;
 	private State acceptableState;
+	
+	private Set<State> currentStates = new HashSet<>();
+	
 	private Set<State> states = new HashSet<>();
 
 	public AutomatRegex(String regex) {
@@ -105,7 +108,7 @@ public class AutomatRegex implements Serializable{
 						c = '\t';
 						break;
 					case 'n':
-						c = 'n';
+						c = '\n';
 						break;
 					case '_':
 						c = ' ';
@@ -230,5 +233,40 @@ public class AutomatRegex implements Serializable{
 			index--;
 		}
 		return num % 2 == 0;
+	}
+	
+	
+	// -----------------------------
+	
+	public void resetAutomat() {
+		currentStates.clear();
+		currentStates.add(initialState);
+		currentStates = addAllEpsilonNeighbours(currentStates);
+	}
+	
+	public boolean canMakeTransitions(char c) {
+		for (State state : currentStates) {
+			List<State> transits = state.getTransit(c);
+			if (transits != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void makeTransitions(char c) {
+		Set<State> newCurrentStates = new HashSet<>();
+		for (State state : currentStates) {
+			List<State> transits = state.getTransit(c);
+			if (transits != null) {
+				newCurrentStates.addAll(transits);
+			}
+		}
+		currentStates = newCurrentStates;
+		addAllEpsilonNeighbours(currentStates);
+	}
+	
+	public boolean hasAcceptableStates() {
+		return currentStates.contains(acceptableState);
 	}
 }
