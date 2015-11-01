@@ -10,7 +10,7 @@ public class GLA {
 		String ans = new String(regDef);
 		for (String def : regexes.keySet()) {
 			if (ans.contains(def)) {
-				ans.replace(def, "(" + regexes.get(def));
+				ans = ans.replace(def, "(" + regexes.get(def) + ")");
 			}
 		}
 		return ans;
@@ -78,7 +78,7 @@ public class GLA {
 				} else if (current.equals("NOVI_REDAK")) {
 					currentRule.addAction(new NewLineAction());
 				} else if (current.equals("-")) {
-					// TODO: Odbaci
+					currentRule.addAction(new RejectAction());
 				} else {
 					if (lexUnits.containsKey(current)) {
 						currentRule.addAction(lexUnits.get(current));
@@ -87,5 +87,12 @@ public class GLA {
 			}
 		}
 		System.out.println("test");
+		
+		
+		// TODO malo uštimat da uzmem prvo stanje kao poèetno
+		LAAutomat automat = new LAAutomat(states.get("S_pocetno"));
+		for (State state : states.values()) {
+			automat.addState(state);
+		}
 	}
 }
