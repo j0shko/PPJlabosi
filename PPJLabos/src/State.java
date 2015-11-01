@@ -1,8 +1,10 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class State {
+public class State implements Serializable {
 
+	private static final long serialVersionUID = 365L;
 	private String name;
 	
 	private Map<String, Rule> rules;

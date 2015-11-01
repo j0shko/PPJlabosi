@@ -1,6 +1,8 @@
+import java.io.Serializable;
 
-public class ReturnAction extends Action {
+public class ReturnAction extends Action implements Serializable {
 
+	private static final long serialVersionUID = 220L;
 	private int index;
 	
 	public ReturnAction(int index) {

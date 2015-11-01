@@ -1,6 +1,7 @@
 
 public class EnterStateAction extends Action {
 
+	private static final long serialVersionUID = 666L;
 	private State state;
 	
 	public EnterStateAction(State state) {

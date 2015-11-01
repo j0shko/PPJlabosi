@@ -1,6 +1,8 @@
+import java.io.Serializable;
 
-public class Action {
+public class Action implements Serializable {
 
+	private static final long serialVersionUID = 42L;
 	private String name;
 	
 	public Action(String name) {

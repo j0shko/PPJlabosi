@@ -1,8 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rule {
+public class Rule implements Serializable {
 
+	private static final long serialVersionUID = 4055L;
 	private String regex;
 	private List<Action> actions;
 	
