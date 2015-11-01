@@ -51,7 +51,7 @@ public class AutomatRegex {
 	public int getStateCount() {
 		return stateCount;
 	}
-
+	
 	private State[] create(String regex) {
 		int bracketCount = 0;
 		boolean hasChoice = false;
@@ -88,12 +88,13 @@ public class AutomatRegex {
 			boolean prefixed = false;
 			State lastState = leftState;
 			for (int i = 0; i < regex.length(); i++) {
+				char currentChar = regex.charAt(i);
 				State a, b;
 				if (prefixed) {
 					// slucaj 1
 					prefixed = false;
 					char c;
-					switch (regex.charAt(i)) {
+					switch (currentChar) {
 					case 't':
 						c = '\t';
 						break;
@@ -104,7 +105,7 @@ public class AutomatRegex {
 						c = ' ';
 						break;
 					default:
-						c = regex.charAt(i);
+						c = currentChar;
 					}
 
 					a = newState();
@@ -112,24 +113,25 @@ public class AutomatRegex {
 					a.addTransit(c, b);
 				} else {
 					// slucaj 2
-					if (regex.charAt(i) == '\\') {
+					if (currentChar == '\\') {
 						prefixed = true;
 						continue;
 					}
-					if (regex.charAt(i) != '(') {
+					if (currentChar != '(') {
 						a = newState();
 						b = newState();
 
-						if (regex.charAt(i) == '$') {
+						if (currentChar == '$') {
 							a.addEpsilonTransit(b);
 						} else {
-							a.addTransit(regex.charAt(i), b);
+							a.addTransit(currentChar, b);
 						}
 					} else {
 						int j = getIndexOfClosingBracket(regex, i+1);
 						State[] temp = create(regex.substring(i+1, j));
 						a = temp[0];
 						b = temp[1];
+						i = j;
 					}
 				}
 				
@@ -203,6 +205,7 @@ public class AutomatRegex {
 				bracketCount--;
 			}
 			i++;
+			current = s.charAt(i);
 		}
 		return i;
 	}

@@ -6,9 +6,16 @@ public class Rule {
 	private String regex;
 	private List<Action> actions;
 	
+	private AutomatRegex regexAut;
+	
 	public Rule(String regex) {
 		this.regex = regex;
+		regexAut = new AutomatRegex(regex);
 		actions = new ArrayList<>();
+	}
+	
+	public boolean accepts(String string) {
+		return regexAut.accepts(string);
 	}
 	
 	public Rule addAction(Action action) {
