@@ -88,7 +88,7 @@ public class GLA {
 				}
 			}
 		}
-		// TODO malo uštimat da uzmem prvo stanje kao poèetno
+		// TODO malo ustimat da uzmem prvo stanje kao pocetno
 		LAAutomat automat = new LAAutomat(states.get("S_pocetno"));
 		for (State state : states.values()) {
 			automat.addState(state);
