@@ -9,13 +9,16 @@ public class State implements Serializable {
 	
 	private List<Rule> rules;
 	
+	private int lastIndex = 0;
+	
 	public State(String name){
 		this.name = name;
 		rules = new ArrayList<>();
 	}
 	
 	public Rule addRule(String regex) {
-		Rule newRule = new Rule(regex);
+		Rule newRule = new Rule(regex, lastIndex);
+		lastIndex++;
 		rules.add(newRule);
 		return newRule;
 	}
@@ -28,4 +31,5 @@ public class State implements Serializable {
 	public List<Rule> getRules() {
 		return rules;
 	}
+
 }

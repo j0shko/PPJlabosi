@@ -58,7 +58,6 @@ public class LA {
 		while(current < size) {
 			if (!currentRules.isEmpty()) {
 				currentChar = code.charAt(current);
-				acceptableRules.clear();
 				Iterator<Rule> it = currentRules.iterator();
 				while(it.hasNext()) {
 					Rule rule = it.next();
@@ -67,6 +66,7 @@ public class LA {
 							acceptableRules.add(rule);
 							end = current;
 						} 
+						
 						it.remove();
 					} else {
 						rule.makeTransitions(currentChar);
@@ -76,7 +76,15 @@ public class LA {
 					current++;
 				}
 			} else if (!acceptableRules.isEmpty()) {
-				Rule rule = acceptableRules.get(0);
+				int smallestIndex = Integer.MAX_VALUE;
+				int listIndex = 0;
+				for (int i = 0; i < acceptableRules.size(); i++) {
+					Rule rule = acceptableRules.get(i);
+					if (rule.getIndex() < smallestIndex) {
+						listIndex = i;
+					}
+				}
+				Rule rule = acceptableRules.get(listIndex);
 				executeRuleActions(rule);
 				currentRules.clear();
 				currentRules.addAll(automat.getCurrentState().getRules());
@@ -85,36 +93,9 @@ public class LA {
 				}
 				acceptableRules.clear();
 			} else {
-				//error
+				System.err.println("greska");
 			}
 		}
-		
-		/*List<Rule> acceptableRules = new ArrayList<>();
-		while(startSub != end) {
-			String substring = code.substring(startSub, endSub);
-			for(Rule current : automat.getCurrentState().getRules()) {
-				if (current.accepts(substring)) {
-					acceptableRules.add(current);
-				}
-			}
-			//ako grupirano ne paše nièem
-			if (acceptableRules.size() == 0) {
-				endSub++;
-				continue;
-			}
-			
-			if (acceptableRules.size() == 1) {
-				Rule rule = acceptableRules.get(0);
-				if (rule.accepts(code.substring(startSub, endSub + 1))) {
-					endSub++;
-					continue;
-				} else {
-					executeRuleActions(rule);
-					endSub++;
-				}
-			}
-			acceptableRules.clear();
-		}*/
 	}
 	
 

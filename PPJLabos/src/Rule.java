@@ -10,11 +10,18 @@ public class Rule extends AutomatRegex implements Serializable {
 	
 	//private AutomatRegex regexAut;
 	
-	public Rule(String regex) {
+	private int index;
+	
+	public Rule(String regex, int index) {
 		super(regex);
 		this.regex = regex;
+		this.index = index;
 		//regexAut = new AutomatRegex(regex);
 		actions = new ArrayList<>();
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 	public boolean accepts(String string) {
@@ -38,6 +45,4 @@ public class Rule extends AutomatRegex implements Serializable {
 	public List<Action> getActions() {
 		return actions;
 	}	
-	
-	//----------------------
 }
