@@ -128,7 +128,7 @@ public class LA {
 			
 			if (acceptedRule == null) {
 				// greska? 
-				System.err.println("greska");
+				//System.err.println("greska");
 				
 				start++;
 				current = start;

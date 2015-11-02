@@ -40,9 +40,14 @@ public class GLA {
 	
 		// read LA states
 		
+		String initState = "";
+		
 		if (current.startsWith("%X")) {
 			String[] line = current.split("\\s");
 			for (int i = 1; i < line.length; ++i) {
+				if (i == 1) {
+					initState = line[i];
+				}
 				states.put(line[i], new State(line[i]));
 			}
 		}
@@ -89,7 +94,7 @@ public class GLA {
 			}
 		}
 		// TODO malo ustimat da uzmem prvo stanje kao pocetno
-		LAAutomat automat = new LAAutomat(states.get("S_pocetno"));
+		LAAutomat automat = new LAAutomat(states.get(initState));
 		for (State state : states.values()) {
 			automat.addState(state);
 		}
