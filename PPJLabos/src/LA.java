@@ -19,6 +19,7 @@ public class LA {
 	private static int current;
 	private static String code;
 	
+	@SuppressWarnings("all")
 	public static void main(String[] args) throws IOException {
 		automat = null;
 		
