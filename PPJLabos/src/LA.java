@@ -23,7 +23,7 @@ public class LA {
 		automat = null;
 		
 		try {
-			FileInputStream fileIn = new FileInputStream("analizator/automat.ser");
+			FileInputStream fileIn = new FileInputStream("automat.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			automat = (LAAutomat) in.readObject();
 			in.close();
