@@ -17,9 +17,31 @@ public class NonTerminalSign extends Sign {
 		public List<Sign> getLine() {
 			return line;
 		}
+		
+		public int length() {
+			return line.size();
+		}
+		
+		public Sign getSignAt(int position) {
+			return line.get(position);
+		}
 
 		public int getPriority() {
 			return priority;
+		}
+		
+		public String toStringWithDotAt(int index) {
+			StringBuilder result = new StringBuilder();
+			for (int i = 0; i < line.size(); i++) {
+				if (index == i) {
+					result.append("*");
+				}
+				result.append(line.get(i).toString());
+			}
+			if (index == line.size()) {
+				result.append("*");
+			}
+			return result.toString();
 		}
 		
 		@Override
@@ -28,7 +50,7 @@ public class NonTerminalSign extends Sign {
 		}
 	}
 	
-	List<GrammarLine> grammar;
+	private List<GrammarLine> grammar;
 	
 	public NonTerminalSign(String name) {
 		super(name);

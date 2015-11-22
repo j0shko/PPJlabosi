@@ -1,7 +1,7 @@
 
 public class Sign {
 	
-	String name;
+	private String name;
 
 	public Sign(String name) {
 		super();

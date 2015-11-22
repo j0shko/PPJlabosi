@@ -14,7 +14,10 @@ public class GSA {
 		Map<String, NonTerminalSign> nonTerminalSigns = new HashMap<>();
 		Map<String, TerminalSign> terminalSigns = new HashMap<>();
 		
-		terminalSigns.put("$", new TerminalSign("$"));
+		NonTerminalSign initial = null;
+		
+		terminalSigns.put(TerminalSign.EPSILON.getName(), TerminalSign.EPSILON);
+		terminalSigns.put(TerminalSign.END.getName(), TerminalSign.END);
 		
 		//read nonterminal signs
 		String line = br.readLine();
@@ -22,6 +25,9 @@ public class GSA {
 			String[] current = line.split("\\s");
 			for (int i = 1; i < current.length; i++) {
 				nonTerminalSigns.put(current[i], new NonTerminalSign(current[i]));
+				if (i == 1) {
+					initial = nonTerminalSigns.get(current[i]);
+				}
 			}
 		}
 		
@@ -68,6 +74,16 @@ public class GSA {
 			}
 			line = br.readLine();
 		}
+		priority++;
+		
+		// adding new nonterminal sign
+		NonTerminalSign newInitial = new NonTerminalSign("<S\'>");
+		List<Sign> newInitialLine = new ArrayList<>();
+		newInitialLine.add(initial);
+		newInitial.addGrammarLine(newInitialLine, priority);
+		nonTerminalSigns.put(newInitial.getName(), newInitial);
+		
+		Automat automat = new Automat(newInitial);
 		
 		System.out.println("burek");
 	}
