@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Automat {
+public class NKA {
 	
 	public static final TerminalSign dot = new TerminalSign("*");
 
@@ -13,29 +13,17 @@ public class Automat {
 		
 		private String name;
 		
-		private NonTerminalSign leftSide;
-		private List<Sign> rightSide;
-		private Set<TerminalSign> nextSigns;
+		private LLProduction production;
 		
 		private Map<Sign, State> transits;
 		private List<State> epsilonTransits;
 		
-		public State(NonTerminalSign leftSide, List<Sign> rightSide, Set<TerminalSign> nextSigns) {
-			this.leftSide = leftSide;
-			this.rightSide = rightSide;
-			this.nextSigns = nextSigns;
+		public State(LLProduction production){
+			this.production = production;
 			transits = new HashMap<>();
 			epsilonTransits = new ArrayList<>();
 			
-			name = leftSide + " -> ";
-			for (Sign sign : rightSide) {
-				name += sign + " ";
-			}
-			name += "{";
-			for (TerminalSign sign : nextSigns) {
-				name += sign + " ";
-			} 
-			name += "}";
+			name = production.toString();
 		}
 		
 		public void addTransit(Sign sign, State state) {
@@ -44,6 +32,10 @@ public class Automat {
 		
 		public State getTransit(Sign sign) {
 			return transits.get(sign);
+		}
+		
+		public Map<Sign, State> getAllTransits() {
+			return transits;
 		}
 		
 		public void addEpsilonTransit(State state) {
@@ -58,20 +50,8 @@ public class Automat {
 			return name;
 		}
 		
-		public void setName(String name) {
-			this.name = name;
-		}
-		
-		public NonTerminalSign getLeftSide() {
-			return leftSide;
-		}
-
-		public List<Sign> getRightSide() {
-			return rightSide;
-		}
-
-		public Set<TerminalSign> getNextSigns() {
-			return nextSigns;
+		public LLProduction getProduction() {
+			return production;
 		}
 		
 		@Override
@@ -79,11 +59,7 @@ public class Automat {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result
-					+ ((leftSide == null) ? 0 : leftSide.hashCode());
-			result = prime * result
-					+ ((nextSigns == null) ? 0 : nextSigns.hashCode());
-			result = prime * result
-					+ ((rightSide == null) ? 0 : rightSide.hashCode());
+					+ ((production == null) ? 0 : production.hashCode());
 			return result;
 		}
 
@@ -96,20 +72,10 @@ public class Automat {
 			if (getClass() != obj.getClass())
 				return false;
 			State other = (State) obj;
-			if (leftSide == null) {
-				if (other.leftSide != null)
+			if (production == null) {
+				if (other.production != null)
 					return false;
-			} else if (!leftSide.equals(other.leftSide))
-				return false;
-			if (nextSigns == null) {
-				if (other.nextSigns != null)
-					return false;
-			} else if (!nextSigns.equals(other.nextSigns))
-				return false;
-			if (rightSide == null) {
-				if (other.rightSide != null)
-					return false;
-			} else if (!rightSide.equals(other.rightSide))
+			} else if (!production.equals(other.production))
 				return false;
 			return true;
 		}
@@ -124,20 +90,11 @@ public class Automat {
 	private List<State> states;
 	private State currentState;
 	
-	public Automat(NonTerminalSign initialNTSign) {
+	public NKA(NonTerminalSign initialNTSign) {
 		states = new ArrayList<>();
 		Set<TerminalSign> initialNextSigns = new HashSet<>();
 		initialNextSigns.add(TerminalSign.END);
 		initialState = create(initialNTSign, 0, 0, initialNextSigns);
-	}
-	
-	public boolean isDKA() {
-		for (State state: states) {
-			if (!state.getAllEpsilonTransits().isEmpty()) {
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	public State getInitialState() {
@@ -148,49 +105,19 @@ public class Automat {
 		return currentState;
 	}
 	
-	public void transformToDKA() {
-		//TODO napravi sve ovo fun
+	public List<State> getStates() {
+		return states;
 	}
 	
-	/*
-	private State create(int pointer, NonTerminalSign current, int grammarLine) {
-		// RADI ALI NE; MALO VISKI MALO STACK OVERFLOW
-		State createdState = new State();
-		StringBuilder name = new StringBuilder(current.toString());
-		
-		NonTerminalSign.GrammarLine currentLine = current.getGrammar().get(grammarLine);
-				
-		if (pointer == currentLine.length()) {
-			name.append("->").append(currentLine.toStringWithDotAt(pointer));
-			createdState.setName(name.toString());
-			states.add(createdState);
-			return createdState;
-		} else {
-			Sign currentSign = currentLine.getSignAt(pointer);
-			
-			if (currentSign instanceof NonTerminalSign) {
-				NonTerminalSign currentNTSign = (NonTerminalSign) currentSign;
-				for (int i = 0; i < currentNTSign.getGrammar().size(); i++) {
-					State newState = create(0, currentNTSign, i);
-					createdState.addEpsilonTransit(newState);
-				}
-			} else if(currentSign.equals(TerminalSign.EPSILON)) {
-				name.append("->*");
-				createdState.setName(name.toString());
-				states.add(createdState);
-				return createdState;
+	public State getStateForProduction(LLProduction production) {
+		for (State state : states) {
+			if (state.getProduction().equals(production)) {
+				return state;
 			}
-			
-			State newState = create(pointer + 1, current, grammarLine);
-			createdState.addTransit(currentSign, newState);
 		}
 		
-		name.append("->").append(currentLine.toStringWithDotAt(pointer));
-		createdState.setName(name.toString());
-		states.add(createdState);
-		return createdState;
+		return null;
 	}
-	*/
 	
 	private State create(NonTerminalSign currentNTS, int pointer, int grammarLineNum, Set<TerminalSign> nextSigns) {
 		NonTerminalSign.GrammarLine currentLine = currentNTS.getGrammar().get(grammarLineNum);
@@ -218,7 +145,7 @@ public class Automat {
 			}
 		}
 		
-		State newState = new State(currentNTS, line, nextSigns);
+		State newState = new State(new LLProduction(currentNTS, line, nextSigns));
 		states.add(newState);
 		
 		if (!isEnd && !isEpsilon) {
@@ -242,7 +169,7 @@ public class Automat {
 					}
 					tempLine.add(0, dot);
 					
-					State tempState = new State(pointedNTS, tempLine, newNextSigns);
+					State tempState = new State(new LLProduction(pointedNTS, tempLine, newNextSigns));
 					int indexOfFoundState = states.indexOf(tempState);
 					if (indexOfFoundState >= 0) {
 						State foundState = states.get(indexOfFoundState);

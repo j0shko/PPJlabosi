@@ -91,8 +91,9 @@ public class GSA {
 			sign.getStartsWith();
 		}
 		 
-		Automat automat = new Automat(newInitial);
+		NKA nkAutomat = new NKA(newInitial);
 		
+		DKA dkaAutomat = new DKA(nkAutomat);
 		System.out.println("burek");
 	}
 }
