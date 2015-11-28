@@ -83,6 +83,14 @@ public class GSA {
 		newInitial.addGrammarLine(newInitialLine, priority);
 		nonTerminalSigns.put(newInitial.getName(), newInitial);
 		
+		for (NonTerminalSign sign : nonTerminalSigns.values()) {
+			sign.getStartsDirectlyWith();
+		}
+		
+		for (NonTerminalSign sign : nonTerminalSigns.values()) {
+			sign.getStartsWith();
+		}
+		 
 		Automat automat = new Automat(newInitial);
 		
 		System.out.println("burek");
