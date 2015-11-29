@@ -1,9 +1,11 @@
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+public class LLProduction implements Serializable {
 
-public class LLProduction {
-
+	private static final long serialVersionUID = 7828928640613019733L;
 	private NonTerminalSign leftSide;
 	private List<Sign> rightSide;
 	private Set<TerminalSign> nextSigns;
@@ -25,6 +27,28 @@ public class LLProduction {
 	public Set<TerminalSign> getNextSigns() {
 		return nextSigns;
 	}
+	
+	public boolean isDotOnEnd() {
+		return rightSide.get(rightSide.size() -1) == NKA.dot;
+	}
+	
+	public boolean isEmpty() {
+		return rightSide.get(0).equals(TerminalSign.EPSILON);
+	}
+	
+	public LLProduction withoutDot() {
+		if (rightSide.contains(NKA.dot)) {
+			List<Sign> newRight = new ArrayList<>();
+			newRight.addAll(rightSide);
+			newRight.remove(NKA.dot);
+			if (newRight.isEmpty()) {
+				newRight.add(TerminalSign.EPSILON);
+			}
+			return new LLProduction(leftSide, newRight, nextSigns);
+		} else {
+			return this;
+		}
+	}
 
 	@Override
 	public String toString() {
@@ -33,12 +57,14 @@ public class LLProduction {
 		for (Sign sign : rightSide) {
 			name.append(sign).append(" ");
 		}
-		name.append("{");
-		for (TerminalSign sign : nextSigns) {
-			name.append(sign).append(" ");
-		} 
-		name.deleteCharAt(name.length() -1);
-		name.append("}");
+		if (nextSigns != null) {
+			name.append("{");
+			for (TerminalSign sign : nextSigns) {
+				name.append(sign).append(" ");
+			} 
+			name.deleteCharAt(name.length() -1);
+			name.append("}");
+		}
 		return name.toString();
 	}
 

@@ -1,64 +1,47 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
-public class NonTerminalSign extends Sign {
+public class NonTerminalSign extends Sign implements Serializable {
+	
+	private static final long serialVersionUID = -5176284700549549118L;
 
-	public class GrammarLine {
+	public class GrammarLine implements Serializable {
 		
-		private List<Sign> line;
+		private static final long serialVersionUID = -4224254325847226144L;
+
+		private LLProduction production;
+		
 		private int priority;
 		
 		public GrammarLine(List<Sign> line, int priority) {
-			this.line = line;
+			this.production = new LLProduction(NonTerminalSign.this, line, null);
 			this.priority = priority;
 		}
 
-		public List<Sign> getLine() {
-			return line;
+		public LLProduction getProduction() {
+			return production;
 		}
 		
 		public int length() {
-			return line.size();
-		}
-		
-		public Sign getSignAt(int position) {
-			return line.get(position);
+			return production.getRightSide().size();
 		}
 		
 		public boolean isEmptyLine() {
-			return line.get(0).equals(TerminalSign.EPSILON);
+			return production.isEmpty();
 		}
 
 		public int getPriority() {
 			return priority;
 		}
 		
-		//TODO maybe not needed
-		public String toStringWithDotAt(int index) {
-			StringBuilder result = new StringBuilder();
-			for (int i = 0; i < line.size(); i++) {
-				if (index == i) {
-					result.append("*");
-				}
-				result.append(line.get(i).toString());
-			}
-			if (index == line.size()) {
-				result.append("*");
-			}
-			return result.toString();
-		}
-		
 		@Override
 		public String toString() {
-			String rightSide = "";
-			for (Sign sign : line) {
-				rightSide += sign + " ";
-			}
 			
-			return "#" + priority + ":" + getName() + " -> " + rightSide;
+			return "#" + priority + ":" + production.toString();
 		}
 	}
 	
@@ -112,7 +95,7 @@ public class NonTerminalSign extends Sign {
 	private Set<Sign> computeStartsDirectlyWith() {
 		Set<Sign> startsDirectlyWith = new HashSet<>();
 		for (GrammarLine line : grammar) {
-			List<Sign> lineSigns = line.getLine();
+			List<Sign> lineSigns = line.production.getRightSide();
 			for (Sign sign : lineSigns) {
 				if (!sign.equals(TerminalSign.EPSILON)) {
 					startsDirectlyWith.add(sign);
@@ -201,5 +184,15 @@ public class NonTerminalSign extends Sign {
 		}
 		
 		return result;
+	}
+	
+	public int getPriorityForProduction(LLProduction production) {
+		for (GrammarLine line : grammar) {
+			if (line.production.equals(production)) {
+				return line.getPriority();
+			}
+		}
+		
+		return -1;
 	}
 }

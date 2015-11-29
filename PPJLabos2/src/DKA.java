@@ -12,13 +12,16 @@ public class DKA {
 	public static class State {
 		private String name;
 		
+		private int num;
+		
 		private List<LLProduction> productions = new ArrayList<>();
 		
 		private Map<Sign, State> transits;
 
-		public State(List<LLProduction> productions) {
+		public State(List<LLProduction> productions, int num) {
 			this.productions = productions;
 			this.transits = new HashMap<>();
+			this.num = num;
 			
 			StringBuilder name = new StringBuilder();
 			
@@ -44,6 +47,14 @@ public class DKA {
 		
 		public State getTransit(Sign sign) {
 			return transits.get(sign);
+		}
+		
+		public Map<Sign, State> getAllTransits() {
+			return transits;
+		}
+		
+		public int getNum() {
+			return num;
 		}
 		
 		public String getName() {
@@ -121,7 +132,9 @@ public class DKA {
 			productions.add(state.getProduction());
 		}
 		
-		initialState = new State(productions);
+		int stateNumber = 0;
+		
+		initialState = new State(productions, stateNumber++);
 		states.add(initialState);
 		
 		Deque<State> stateStack = new ArrayDeque<>();
@@ -154,7 +167,7 @@ public class DKA {
 				if (sameState != null) {
 					currentState.addTransit(sign, sameState);
 				} else {
-					State newState = new State(newProductions);
+					State newState = new State(newProductions, stateNumber++);
 					states.add(newState);
 					currentState.addTransit(sign, newState);
 					stateStack.push(newState);

@@ -1,6 +1,9 @@
+import java.io.Serializable;
 
-public class Sign {
+
+public class Sign implements Serializable{
 	
+	private static final long serialVersionUID = -5101958913362850635L;
 	private String name;
 
 	public Sign(String name) {

@@ -1,6 +1,9 @@
+import java.io.Serializable;
 
-public class TerminalSign extends Sign {
 
+public class TerminalSign extends Sign implements Serializable{
+
+	private static final long serialVersionUID = 635480218359362483L;
 	public static final TerminalSign EPSILON = new TerminalSign("$");
 	public static final TerminalSign END = new TerminalSign("$END$");
 	

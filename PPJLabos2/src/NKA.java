@@ -121,7 +121,7 @@ public class NKA {
 	
 	private State create(NonTerminalSign currentNTS, int pointer, int grammarLineNum, Set<TerminalSign> nextSigns) {
 		NonTerminalSign.GrammarLine currentLine = currentNTS.getGrammar().get(grammarLineNum);
-		List<Sign> line = new ArrayList<>(currentLine.getLine());
+		List<Sign> line = new ArrayList<>(currentLine.getProduction().getRightSide());
 		
 		Sign current = null;
 		boolean isEpsilon = false;
@@ -163,7 +163,7 @@ public class NKA {
 				NonTerminalSign pointedNTS = (NonTerminalSign) current;
 				List<NonTerminalSign.GrammarLine> pointedNTSgrammar = pointedNTS.getGrammar();
 				for(int i = 0, end = pointedNTSgrammar.size(); i < end; i++) {
-					List<Sign> tempLine = new ArrayList<>(pointedNTSgrammar.get(i).getLine());
+					List<Sign> tempLine = new ArrayList<>(pointedNTSgrammar.get(i).getProduction().getRightSide());
 					if (tempLine.get(0).equals(TerminalSign.EPSILON)) {
 						tempLine.clear();
 					}
