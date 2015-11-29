@@ -2,9 +2,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 
 public class GSA {
@@ -71,6 +73,7 @@ public class GSA {
 				}
 				current.addGrammarLine(currentRule, priority);
 				priority++;
+				
 			}
 			line = br.readLine();
 		}
@@ -86,14 +89,19 @@ public class GSA {
 		for (NonTerminalSign sign : nonTerminalSigns.values()) {
 			sign.getStartsDirectlyWith();
 		}
-		
+
 		for (NonTerminalSign sign : nonTerminalSigns.values()) {
 			sign.getStartsWith();
 		}
 		 
+		System.err.println("Creating NKA...");
 		NKA nkAutomat = new NKA(newInitial);
-		
+		System.err.println("NKA created");
+		System.err.println("NKA has " + nkAutomat.getStates().size()+ " states.");
+
+		System.err.println("Creating DKA...");
 		DKA dkaAutomat = new DKA(nkAutomat);
-		System.out.println("burek");
+		System.err.println("DKA created");
+		System.err.println("DKA has " + dkaAutomat.getStates().size()+ " states.");
 	}
 }

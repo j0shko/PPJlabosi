@@ -135,9 +135,9 @@ public class NonTerminalSign extends Sign {
 	}
 
 	private Set<TerminalSign> computeStartsWith() {
+		
 		Set<TerminalSign> startsWith = new HashSet<>();
 		Set<NonTerminalSign> uncheckedSigns = new HashSet<>();
-		//Set<NonTerminalSign> checkedSigns = new HashSet<>();
 		
 		Set<Sign> startsDirectlyWith = getStartsDirectlyWith();
 		
@@ -166,8 +166,8 @@ public class NonTerminalSign extends Sign {
 				toDelete.add(current);
 			}
  			
- 			uncheckedSigns.removeAll(toDelete);
  			uncheckedSigns.addAll(toAdd);
+ 			uncheckedSigns.removeAll(toDelete);
 		}
 		
 		return startsWith;

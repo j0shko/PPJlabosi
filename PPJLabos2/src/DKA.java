@@ -1,4 +1,6 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -102,53 +104,117 @@ public class DKA {
 		return currentState;
 	}
 	
-	private void createFromNKA(NKA nkaAutomat) {
-		Set<NKA.State> checkedStates = new HashSet<>();
-		
-		for (NKA.State state : nkaAutomat.getStates()) {
-			if (!checkedStates.contains(state)) {
-				List<LLProduction> productions = new ArrayList<>();
-				
-				checkedStates.add(state);
-				productions.add(state.getProduction());
-				
-				Set<NKA.State> uncheckedEpsilons = new HashSet<>();
-				uncheckedEpsilons.addAll(state.getAllEpsilonTransits());
-				
-				while (!uncheckedEpsilons.isEmpty()) {
-					
-					Set<NKA.State> newUnchecked = new HashSet<>();
-					for (NKA.State epsilonTransitState : uncheckedEpsilons) {
-						productions.add(epsilonTransitState.getProduction());
-						checkedStates.add(epsilonTransitState);
-						
-						newUnchecked.addAll(epsilonTransitState.getAllEpsilonTransits());
-					}
-					
-					uncheckedEpsilons = newUnchecked;
-				}
-				
-				
-				states.add(new State(productions));
-			}
-		}
-		
-		for (State state : states) {
-			for (LLProduction production : state.productions) {
-				NKA.State nkaState = nkaAutomat.getStateForProduction(production);
-				Map<Sign, NKA.State> nkaTransits = nkaState.getAllTransits();
-				
-				for (Sign sign : nkaTransits.keySet()) {
-					LLProduction resultProduction = nkaTransits.get(sign).getProduction();
-					State resultState = getStateForProduction(resultProduction);
-					state.addTransit(sign, resultState);
-				}
-			}
-		}
-		
-		initialState = states.get(0);
-		currentState = initialState;
+	public List<State> getStates() {
+		return states;
 	}
+	
+	private void createFromNKA(NKA nkaAutomat) {		
+		NKA.State initial = nkaAutomat.getInitialState();
+		
+		Set<NKA.State> currentNKAStates = new HashSet<>();
+		Set<NKA.State> initialSet = new HashSet<>();
+		initialSet.add(initial);
+		currentNKAStates.addAll(getEpsilonClosure(initialSet));
+		
+		List<LLProduction> productions = new ArrayList<>();
+		for (NKA.State state : currentNKAStates) {
+			productions.add(state.getProduction());
+		}
+		
+		initialState = new State(productions);
+		states.add(initialState);
+		
+		Deque<State> stateStack = new ArrayDeque<>();
+		Deque<Set<NKA.State>> nkaStateStack = new ArrayDeque<>();
+		
+		stateStack.push(initialState);
+		nkaStateStack.push(currentNKAStates);
+		
+		while (!stateStack.isEmpty()) {
+			currentNKAStates = nkaStateStack.pop();
+			State currentState = stateStack.pop();
+			
+			Set<Sign> transitionSigns = getTransitionsForNKAStates(currentNKAStates);
+			for (Sign sign : transitionSigns) {
+				Set<NKA.State> newStates = getTransitionedStates(sign, currentNKAStates);
+				newStates.addAll(getEpsilonClosure(newStates));
+				
+				List<LLProduction> newProductions = new ArrayList<>();
+				for (NKA.State state : newStates) {
+					newProductions.add(state.getProduction());
+				}
+				
+				State sameState = null;
+				for (State state : states) {
+					if (state.productions.containsAll(newProductions) && state.productions.size() == newProductions.size()) {
+						sameState = state;
+						break;
+					}
+				}
+				if (sameState != null) {
+					currentState.addTransit(sign, sameState);
+				} else {
+					State newState = new State(newProductions);
+					states.add(newState);
+					currentState.addTransit(sign, newState);
+					stateStack.push(newState);
+					nkaStateStack.push(newStates);
+				}
+			}
+		}
+	}
+	
+	private Set<NKA.State> getEpsilonClosure(Set<NKA.State> states) {
+		Set<NKA.State> closure = new HashSet<>();
+		closure.addAll(states);
+		
+		Set<NKA.State> uncheckedEpsilons = new HashSet<>();
+		for (NKA.State state : states) {
+			uncheckedEpsilons.addAll(state.getAllEpsilonTransits());
+		}
+		
+		Set<NKA.State> newUnchecked = new HashSet<>();
+		do {
+			
+			for (NKA.State state : uncheckedEpsilons) {
+				closure.add(state);
+				for (NKA.State epsilonState : state.getAllEpsilonTransits()) {
+					if (!closure.contains(epsilonState)) {
+						newUnchecked.add(epsilonState);
+					}
+				}
+			}		
+			uncheckedEpsilons.clear();
+			uncheckedEpsilons.addAll(newUnchecked);
+			newUnchecked.clear();
+		} while (!uncheckedEpsilons.isEmpty());
+		
+		return closure;
+	}
+	
+	private Set<Sign> getTransitionsForNKAStates(Set<NKA.State> states) {
+		Set<Sign> transitionsSigns = new HashSet<>();
+		
+		for (NKA.State state : states) {
+			transitionsSigns.addAll(state.getAllTransits().keySet());
+		}
+		
+		return transitionsSigns;
+	}
+	
+	private Set<NKA.State> getTransitionedStates(Sign sign, Set<NKA.State> states) {
+		Set<NKA.State> newStates = new HashSet<>();
+		
+		for (NKA.State state : states) {
+			NKA.State transitState = state.getTransit(sign);
+			if (transitState != null) {
+				newStates.add(transitState);
+			}
+		}
+		
+		return newStates;
+	}
+	
 	
 	public State getStateForProduction(LLProduction production) {
 		for (State state : states) {
