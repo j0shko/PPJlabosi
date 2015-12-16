@@ -14,7 +14,10 @@ public class SemantickiAnalizator {
 		while ((line = br.readLine()) != null) {
 			text += line + '\n';
 		}
-		
-		GenerativeTree tree = new GenerativeTree(text);
+		String x = "\"isus  \\\\  krist\"";
+		System.out.println(x);
+		System.out.println(Checker.checkString(x));
+//		GenerativeTree tree = new GenerativeTree(text);
+//		tree.printTree();
 	}
 }

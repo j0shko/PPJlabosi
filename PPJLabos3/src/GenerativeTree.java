@@ -5,32 +5,7 @@ import java.util.List;
 
 public class GenerativeTree {
 
-	public static class TreeNode {
-		private List<TreeNode> children = new ArrayList<>();
-		
-		private TreeNodeData data;
-		
-		public TreeNode(TreeNodeData data) {
-			this.data = data;
-		}
-		
-		public TreeNodeData getData() {
-			return data;
-		}
-		
-		public void addChild(TreeNode child) {
-			children.add(child);
-		}
-		
-		public List<TreeNode> getChildren() {
-			return children;
-		}
-		
-		@Override
-		public String toString() {
-			return data.toString();
-		}
-	}
+	
 	
 	private TreeNode root;
 	
@@ -56,7 +31,7 @@ public class GenerativeTree {
 			System.out.print(" ");
 		}
 		System.out.println(root);
-		for (TreeNode node : root.children) {
+		for (TreeNode node : root.getChildren()) {
 			printTreeRecursive(node, spaceCount + 1);
 		}
 	}
