@@ -7,7 +7,7 @@ public class NonTerminalSignData implements TreeNodeData {
 	}
 	
 	@Override
-	public String getData() {
+	public String getName() {
 		return name;
 	}
 

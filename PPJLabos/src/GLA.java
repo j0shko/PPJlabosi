@@ -93,7 +93,6 @@ public class GLA {
 				}
 			}
 		}
-		// TODO malo ustimat da uzmem prvo stanje kao pocetno
 		LAAutomat automat = new LAAutomat(states.get(initState));
 		for (State state : states.values()) {
 			automat.addState(state);

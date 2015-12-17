@@ -1,5 +1,5 @@
 
 public interface TreeNodeData {
 
-	String getData();
+	String getName();
 }

@@ -11,7 +11,7 @@ public class TerminalSignData implements TreeNodeData {
 	}
 
 	@Override
-	public String getData() {
+	public String getName() {
 		return name;
 	}
 
@@ -25,6 +25,6 @@ public class TerminalSignData implements TreeNodeData {
 	
 	@Override
 	public String toString() {
-		return name + " " + lineNum + " " + value;
+		return name + "(" + lineNum + "," + value + ")";
 	}
 }

@@ -1,5 +1,5 @@
 
 public interface ICheckable {
 
-	boolean check();
+	void check();
 }

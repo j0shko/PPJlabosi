@@ -1,42 +1,63 @@
+import java.util.List;
+
 
 public class PrimaryExpression extends TreeNode implements ICheckable {
 
+	private String type;
+	private boolean lExpression;
+	
 	public PrimaryExpression(TreeNodeData data) {
 		super(data);
 		
 	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public boolean islExpression() {
+		return lExpression;
+	}
 
 	@Override
-	public boolean check() {
-		if (getChildren().size() == 1) {
-			TreeNode first = getChildren().get(0);
+	public void check() {
+		String errorMessage;
+		List<TreeNode> children = getChildren();
+		
+		if (children.size() == 1) {
+			TreeNode first = children.get(0);
+			errorMessage = first.toString();
 			String value = ((TerminalSignData) first.getData()).getValue();
-			switch (first.getData().getData()) {
+			switch (first.getData().getName()) {
 			case "IDN":
-				// TODO: provjeri jel IDN.ime deklarirano
+				// TODO: provjeri jel IDN.ime deklarirano i postavi tip na IDN.type
 				break;
 			case "BROJ":
-				return Checker.checkInteger(value);
+				Checker.throwException(Checker.checkInteger(value), errorMessage);
+				type = "int";
+				lExpression = false;
+				break;
 			case "ZNAK":
-				return Checker.checkChar(value);
+				Checker.throwException(Checker.checkChar(value), errorMessage);
+				type = "char";
+				lExpression = false;
+				break;
 			case "NIZ_ZNAKOVA":
-				return Checker.checkString(value);
-			default:
-				// TODO makni matijina sranja
-				System.err.println("pojedi govno");	
+				Checker.throwException(Checker.checkString(value), errorMessage);
+				type = "array(const(char))";
+				lExpression = false;
 			}
-		} else if (getChildren().size() == 3) {
-			TreeNode left = getChildren().get(0);
-			TreeNode expression = getChildren().get(1);
-			TreeNode right = getChildren().get(2);
+		} else if (children.size() == 3) {
+			// L_ZAGRADA <izraz> D_ZAGRADA
 			
-			if (left.getData().getData().equals("L_ZAGRADA")
-				&& expression.getData().getData().equals("<izraz>")
-				&& right.getData().getData().equals("R_ZAGRADA")) {
-					return ((ICheckable) expression).check();
-			}
+			errorMessage = children.get(0) + " <izraz> " + children.get(2);
+			
+			Expression expression = (Expression) children.get(1);
+			expression.check();
+			
+			type = expression.getType();
+			lExpression = expression.islExpression();
 		}
-		return false;
 	} 
 
 }
