@@ -15,11 +15,11 @@ public class JumpCommand extends TreeNode implements ICheckable {
 			if (children.get(0).getData().getName() == "KR_RETURN") {
 				// KR_RETURN TOCKAZAREZ
 				
-				// TODO provjeri jel naredba u funkciji koja vraæa void
+				Checker.throwException(Checker.isInsideVoidFunction(), errorMessage);
 			} else {
 				// (KR_CONTINUE | KR_BREAK) TOCKAZAREZ
 				
-				// TODO provjeri jel naredba u petlji
+				Checker.throwException(Checker.isInsideLoop(), errorMessage);
 			}
 		} else {
 			// KR_RETURN <izraz> TOCKAZAREZ
@@ -29,8 +29,10 @@ public class JumpCommand extends TreeNode implements ICheckable {
 			
 			expression.check();
 			
-			// TODO provjeri jel naredba u funkciji koja vraæa pov i vrijedi <izraz>.tip ~ pov
+			Checker.throwException(Checker.isInsideNonVoidFunction(), errorMessage);
 			
+			String functionType = Checker.getReturnValueOfScopeFunction();
+			Checker.throwException(Checker.checkTildaOperator(expression.getType(), functionType), errorMessage);
 		}
 
 	}

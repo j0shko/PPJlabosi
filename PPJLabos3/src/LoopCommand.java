@@ -20,11 +20,15 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			expression.check();
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorString);
 			
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope.setLoop(true);
 			
 			Command command = (Command) children.get(4);
 			
 			command.check();
+			
+			Scope.currentScope = parentScope;
 		} else if (children.size() == 6) {
 			// KR_FOR L_ZAGRADA <izraz_naredba>1 <izraz_naredba>2 D_ZAGRADA <naredba>
 			String errorString = "<naredba_petlje> ::= " + children.get(0) + " " + children.get(1)
@@ -39,10 +43,15 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			expressionCommand2.check();
 			Checker.throwException(Checker.checkTildaOperator(expressionCommand2.getType(), "int"), errorString);
 			
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope.setLoop(true);
+			
 			Command command = (Command) children.get(4);
 			
 			command.check();
+			
+			Scope.currentScope = parentScope;
 		} else if (children.size() == 7) {
 			// KR_FOR L_ZAGRADA <izraz_naredba>1 <izraz_naredba>2 <izraz> D_ZAGRADA <naredba>
 			String errorString = "<naredba_petlje> ::= " + children.get(0) + " " + children.get(1)
@@ -61,10 +70,15 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			
 			expression.check();
 			
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope.setLoop(true);
+			
 			Command command = (Command) children.get(4);
 						
 			command.check();
+			
+			Scope.currentScope = parentScope;
 		}
 	}
 

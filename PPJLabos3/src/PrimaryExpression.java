@@ -1,6 +1,5 @@
 import java.util.List;
 
-
 public class PrimaryExpression extends TreeNode implements ICheckable {
 
 	private String type;
@@ -8,7 +7,6 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 	
 	public PrimaryExpression(TreeNodeData data) {
 		super(data);
-		
 	}
 	
 	public String getType() {
@@ -25,12 +23,18 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 		List<TreeNode> children = getChildren();
 		
 		if (children.size() == 1) {
+			// IDN | BROJ | ZNAK | NIZ_ZNAKOVA
+
 			TreeNode first = children.get(0);
 			errorMessage = first.toString();
 			String value = ((TerminalSignData) first.getData()).getValue();
 			switch (first.getData().getName()) {
 			case "IDN":
-				// TODO: provjeri jel IDN.ime deklarirano i postavi tip na IDN.type
+				String name = first.getData().getName();
+				Checker.throwException(Checker.isIdentificatorDeclared(name), errorMessage);
+				Scope.IdentificatorData identificator = Checker.getIdentificator(name);
+				type = identificator.getType();
+				lExpression = identificator.islExpression();
 				break;
 			case "BROJ":
 				Checker.throwException(Checker.checkInteger(value), errorMessage);
@@ -44,7 +48,10 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 				break;
 			case "NIZ_ZNAKOVA":
 				Checker.throwException(Checker.checkString(value), errorMessage);
-				type = "array(const(char))";
+				if (Initialisator.initialisatorCalled) {
+					Initialisator.string = value;
+				}
+				type = "const(char)[]";
 				lExpression = false;
 			}
 		} else if (children.size() == 3) {

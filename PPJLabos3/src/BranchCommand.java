@@ -20,11 +20,14 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			expression.check();
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorMessage);
 
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
 			
 			Command command = (Command) children.get(4);
 			
 			command.check();
+			
+			Scope.currentScope = parentScope;
 		} else {
 			// KR_IF L_ZAGRADA <izraz> D_ZAGRADA <naredba>1 KR_ELSE <naredba>2
 			String errorMessage = "<naredba_grananja> ::= " + children.get(0) + " " + children.get(1)
@@ -35,15 +38,23 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			expression.check();
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorMessage);
 			
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			
 			Command command1 = (Command) children.get(4);
 			
 			command1.check();
 			
-			// TODO možda bi vamo trebalo dodati dodavanje konteksta za djecu
+			Scope.currentScope = parentScope;
+			
+			parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			
 			Command command2 = (Command) children.get(6);
 						
 			command2.check();
+			
+			Scope.currentScope = parentScope;
 		}
 
 	}
