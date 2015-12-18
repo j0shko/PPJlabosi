@@ -44,7 +44,7 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 			
 			type = nType;
 		} else {
-			if (children.get(1).getData().getName() == "L_UGL_ZAGRADA") {
+			if (children.get(1).getData().getName().equals("L_UGL_ZAGRADA")) {
 				// IDN L_UGL_ZAGRADA BROJ D_UGL_ZAGRADA
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
 										+ " " + children.get(2) + " " + children.get(3);
@@ -61,7 +61,7 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				
 				String type = nType + "[]";
 				Scope.currentScope.addIdentificator(name, type, true);
-			} else if (children.get(2).getData().getName() == "KR_VOID") {
+			} else if (children.get(2).getData().getName().equals("KR_VOID")) {
 				// IDN L_ZAGRADA KR_VOID D_ZAGRADA
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
 										+ " " + children.get(2) + " " + children.get(3);

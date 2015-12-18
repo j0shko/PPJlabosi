@@ -32,7 +32,7 @@ public class TypeName extends TreeNode implements ICheckable {
 			TypeSpecificator typeSpecificator = (TypeSpecificator) children.get(0);
 			
 			typeSpecificator.check();
-			Checker.throwException(typeSpecificator.getType() != "void", errorMessage);
+			Checker.throwException(typeSpecificator.getType().equals("void"), errorMessage);
 			
 			type = "const(" + typeSpecificator.getType() + ")";
 		}

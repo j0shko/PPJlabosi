@@ -41,14 +41,7 @@ public class GenerativeTree {
 		currentLine = currentLine.trim();
 		
 		// create node for first line data
-		TreeNodeData newNodeData;
-		if (currentLine.startsWith("<")) {
-			newNodeData = new NonTerminalSignData(currentLine);
-		} else {
-			String[] lineStuff = currentLine.split(" ");
-			newNodeData = new TerminalSignData(lineStuff[0], Integer.parseInt(lineStuff[1]), lineStuff[2]);
-		}
-		TreeNode currentNode = new TreeNode(newNodeData); 
+		TreeNode currentNode = getNodeForLine(currentLine);
 		
 		// call recursively for all lines with exactly one more space than first line (current node)
 		int start = 1;
@@ -87,5 +80,56 @@ public class GenerativeTree {
 	
 	private static List<String> splitByLines(String text) {
 		return new ArrayList<>(Arrays.asList(text.split("\n")));
+	}
+	
+	private static TreeNode getNodeForLine(String line) {
+		TreeNodeData data;
+		if (line.startsWith("<")) {
+			data = new NonTerminalSignData(line);
+		} else {
+			String[] lineStuff = line.split(" ");
+			data = new TerminalSignData(lineStuff[0], Integer.parseInt(lineStuff[1]), lineStuff[2]);
+		}
+		switch (line) {
+		case "<primarni_izraz>" : return new PrimaryExpression(data);
+		case "<postfiks_izraz>" : return new PostfixExpression(data);
+		case "<lista_argumenata>" : return new ArgumentList(data);
+		case "<unarni_izraz>" : return new UnaryExpression(data);
+		case "<unarni_operator>" : return new UnaryOperator(data);
+		case "<cast_izraz>" : return new CastExpression(data);
+		case "<ime_tipa>" : return new TypeName(data);
+		case "<specifikator_tipa>" : return new TypeSpecificator(data);
+		case "<multiplikativni_izraz>" : return new MultiplicativeExpression(data);
+		case "<aditivni_izraz>" : return new AditiveExpression(data);
+		case "<odnosni_izraz>" : return new RelationsExpression(data);
+		case "<jednakosni_izraz>" : return new EqualsExpression(data);
+		case "<bin_i_izraz>" : return new BinaryAndExpression(data);
+		case "<bin_xili_izraz>" : return new BinaryXorExpression(data);
+		case "<bin_ili_izraz>" : return new BinaryOrExpression(data);
+		case "<log_i_izraz>" : return new LogicalAndExpression(data);
+		case "<log_ili_izraz>" : return new LogicalOrExpression(data);
+		case "<izraz_pridruzivanja>" : return new AssignmentExpression(data);
+		case "<izraz>" : return new Expression(data);
+		case "<slozena_naredba>" : return new ComplexCommand(data);
+		case "<lista_naredbi>" : return new CommandList(data);
+		case "<naredba>" : return new Command(data);
+		case "<izraz_naredba>" : return new ExpressionCommand(data);
+		case "<naredba_grananja>" : return new BranchCommand(data);
+		case "<naredba_petlje>" : return new LoopCommand(data);
+		case "<naredba_skoka>" : return new JumpCommand(data);
+		case "<prijevodna_jedinica>" : return new TranslationUnit(data);
+		case "<vanjska_deklaracija>" : return new OuterDeclaration(data);
+		case "<definicija_funkcije>" : return new FunctionDefinition(data);
+		case "<lista_parametara>" : return new ParameterList(data);
+		case "<deklaracija_parametra>" : return new ParameterDeclaration(data);
+		case "<lista_deklaracija>" : return new DeclarationList(data);
+		case "<deklaracija>": return new Declaration(data);
+		case "<lista_init_deklaratora>" : return new InitDeclaratorList(data);
+		case "<init_deklarator>" : return new InitDeclarator(data);
+		case "<izravni_deklarator>" : return new DirectDeclarator(data);
+		case "<inicijalizator>" : return new Initialisator(data);
+		case "<lista_izraza_pridruzivanja>" : return new AssignmentExpressionList(data);
+		default: return new TreeNode(data);
+		}
 	}
 }

@@ -22,6 +22,7 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
 			Command command = (Command) children.get(4);
@@ -45,6 +46,7 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
 			Command command = (Command) children.get(4);
@@ -72,6 +74,7 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
 			Command command = (Command) children.get(4);

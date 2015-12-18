@@ -98,7 +98,7 @@ public class Checker {
 	}
 	
 	public static boolean isNumber(String type) {
-		return type == "char" || type == "int" || type == "const(char)" || type == "const(int)";
+		return type.equals("char") || type.equals("int") || type.equals("const(char)") || type.equals("const(int)");
 	}
 	
 	public static String getNumberTypeFromConstantOrArray(String type) {
@@ -113,7 +113,7 @@ public class Checker {
 	}
 	
 	public static boolean isNumberArray(String type) {
-		return type == "char[]" || type == "int[]" || type == "const(char)[]" || type == "const(int)[]";
+		return type.equals("char[]") || type.equals("int[]") || type.equals("const(char)[]") || type.equals("const(int)[]");
 	}
 	
 	public static String getArrayType(String type) {

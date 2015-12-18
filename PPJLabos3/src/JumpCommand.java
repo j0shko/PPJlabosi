@@ -12,7 +12,7 @@ public class JumpCommand extends TreeNode implements ICheckable {
 		List<TreeNode> children = getChildren();
 		if (children.size() == 2) {
 			String errorMessage = "<naredba_skoka> ::= " + children.get(0) + " " + children.get(1);
-			if (children.get(0).getData().getName() == "KR_RETURN") {
+			if (children.get(0).getData().getName().equals("KR_RETURN")) {
 				// KR_RETURN TOCKAZAREZ
 				
 				Checker.throwException(Checker.isInsideVoidFunction(), errorMessage);

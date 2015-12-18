@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -12,6 +14,7 @@ public class Scope {
 	private String functionType;
 	
 	private Scope parentScope;
+	private List<Scope> childScopes = new ArrayList<>();
 	
 	private Map<String, IdentificatorData> identificatorMap = new HashMap<>();
 	private Map<String, FunctionData> functionMap = new HashMap<>();
@@ -92,6 +95,14 @@ public class Scope {
 	
 	public Scope getParentScope() {
 		return parentScope;
+	}
+	
+	public List<Scope> getChildScopes() {
+		return childScopes;
+	}
+	
+	public void addChildScope(Scope scope) {
+		childScopes.add(scope);
 	}
 	
 	public String getFunctionType() {

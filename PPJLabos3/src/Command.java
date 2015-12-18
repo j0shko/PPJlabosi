@@ -13,6 +13,16 @@ public class Command extends TreeNode implements ICheckable {
 		List<TreeNode> children = getChildren();
 		ICheckable command = (ICheckable) children.get(0);
 		
-		command.check();
+		if (children.get(0).getData().getName().equals("<slozena_naredba>")) {
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
+			
+			command.check();
+			
+			Scope.currentScope = parentScope;
+		} else {
+			command.check();
+		}
 	}
 }

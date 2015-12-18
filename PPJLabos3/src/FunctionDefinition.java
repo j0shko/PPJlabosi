@@ -10,7 +10,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 	@Override
 	public void check() {
 		List<TreeNode> children = getChildren();
-		if (children.get(3).getData().getName() == "KR_VOID") {
+		if (children.get(3).getData().getName().equals("KR_VOID")) {
 			// <ime_tipa> IDN L_ZAGRADA KR_VOID D_ZAGRADA <slozena_naredba>
 			String errorMessage = "<definicija_funkcije> ::= <ime_tipa> " + children.get(1) + " " 
 									+ children.get(2) + " " + children.get(3) + " " + children.get(4) 
@@ -32,6 +32,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setFunction(true);
 			Scope.currentScope.setFunctionType(functionType);
 			
@@ -74,6 +75,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setFunction(true);
 			Scope.currentScope.setFunctionType(functionType);
 			

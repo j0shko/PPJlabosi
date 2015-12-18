@@ -31,7 +31,7 @@ public class UnaryExpression extends TreeNode implements ICheckable {
 			type = postfixExpression.getType();
 			lExpression = postfixExpression.islExpression();
 		} else {
-			if (children.get(0).getData().getName() == "<unarni_operator>") {
+			if (children.get(0).getData().getName().equals("<unarni_operator>")) {
 				// <unarni_operator> <cast_izraz>
 				String errorMessage = "<unarni_izraz> ::= <unarni_operator> <cast_izraz>";
 				

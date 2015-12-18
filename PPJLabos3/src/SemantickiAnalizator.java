@@ -6,18 +6,29 @@ import java.io.InputStreamReader;
 public class SemantickiAnalizator {
 
 	public static void main(String[] args) throws IOException {
-		/*BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String text = "";
 		
 		String line;
 		
 		while ((line = br.readLine()) != null) {
 			text += line + '\n';
-		}*/
-		String x = "\"isus  \\\\  krist\"";
-		System.out.println(x);
-		System.out.println(Checker.checkString(x));
-//		GenerativeTree tree = new GenerativeTree(text);
-//		tree.printTree();
+		}
+
+		GenerativeTree tree = new GenerativeTree(text);
+		
+		Scope.currentScope = new Scope(null);
+		Scope.globalScope = Scope.currentScope;
+		try {
+			((ICheckable) tree.getRoot()).check();
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		if (Scope.globalScope.containsFunction("main") && Scope.globalScope.getFunction("main").getType() == "f(void->int)") {
+			System.out.println("main");
+		} else {
+			
+		}
 	}
 }
