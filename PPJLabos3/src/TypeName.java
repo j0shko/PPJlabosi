@@ -29,10 +29,10 @@ public class TypeName extends TreeNode implements ICheckable {
 			// KR_CONST <specifikator_tipa>
 			String errorMessage = "<ime_tipa> ::= " + children.get(0) + " <specifikator_tipa>";
 			
-			TypeSpecificator typeSpecificator = (TypeSpecificator) children.get(0);
+			TypeSpecificator typeSpecificator = (TypeSpecificator) children.get(1);
 			
 			typeSpecificator.check();
-			Checker.throwException(typeSpecificator.getType().equals("void"), errorMessage);
+			Checker.throwException(!typeSpecificator.getType().equals("void"), errorMessage);
 			
 			type = "const(" + typeSpecificator.getType() + ")";
 		}

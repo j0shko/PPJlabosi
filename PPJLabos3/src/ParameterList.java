@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParameterList extends TreeNode implements ICheckable {
 
-	private List<Parameter> parameters;
+	private List<Parameter> parameters = new ArrayList<>();
 	
 	public class Parameter {
 		private String name;

@@ -36,7 +36,7 @@ public class InitDeclaratorList extends TreeNode implements ICheckable {
 			
 			initDeclaratorList.check();
 			
-			InitDeclarator initDeclarator = (InitDeclarator) children.get(1);
+			InitDeclarator initDeclarator = (InitDeclarator) children.get(2);
 			initDeclarator.setnType(nType);
 			
 			initDeclarator.check();

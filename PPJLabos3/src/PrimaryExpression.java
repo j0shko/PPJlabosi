@@ -26,15 +26,24 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 			// IDN | BROJ | ZNAK | NIZ_ZNAKOVA
 
 			TreeNode first = children.get(0);
-			errorMessage = first.toString();
+			errorMessage = "<primarni_izraz> ::= " + first.toString();
 			String value = ((TerminalSignData) first.getData()).getValue();
 			switch (first.getData().getName()) {
 			case "IDN":
-				String name = first.getData().getName();
-				Checker.throwException(Checker.isIdentificatorDeclared(name), errorMessage);
-				Scope.IdentificatorData identificator = Checker.getIdentificator(name);
-				type = identificator.getType();
-				lExpression = identificator.islExpression();
+				// TODO vamo bi moglo još grešaka zapast
+				boolean identificatorDeclared = Checker.isIdentificatorDeclared(value);
+				boolean functionDeclared = Checker.isFunctionDeclared(value);
+				Checker.throwException(identificatorDeclared || functionDeclared, errorMessage);
+				if (identificatorDeclared) {
+					Scope.IdentificatorData identificator = Checker.getIdentificator(value);
+					type = identificator.getType();
+					lExpression = identificator.islExpression();
+				} else {
+					Scope.FunctionData function = Checker.getFunction(value);
+					type = function.getType();
+					lExpression = false;
+				}
+				
 				break;
 			case "BROJ":
 				Checker.throwException(Checker.checkInteger(value), errorMessage);
@@ -57,7 +66,7 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 		} else if (children.size() == 3) {
 			// L_ZAGRADA <izraz> D_ZAGRADA
 			
-			errorMessage = children.get(0) + " <izraz> " + children.get(2);
+			errorMessage = "<primarni_izraz> ::= " + children.get(0) + " <izraz> " + children.get(2);
 			
 			Expression expression = (Expression) children.get(1);
 			expression.check();

@@ -136,4 +136,18 @@ public class Scope {
 	public void addIdentificator(String name, String type, boolean lExpression) {
 		identificatorMap.put(name, new IdentificatorData(name, type, lExpression));
 	}
+	
+	public boolean checkIfAllFunctionsAreDefined() {
+		for (FunctionData function : functionMap.values()) {
+			if (!function.isDefined) {
+				return false;
+			}
+		} 
+		
+		boolean defined = true;
+		for (Scope subScopes : childScopes) {
+			defined = defined && subScopes.checkIfAllFunctionsAreDefined();
+		}
+		return defined;
+	}
 }

@@ -22,7 +22,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			Checker.throwException(!Checker.isConstantType(typeName.getType()), errorMessage);
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
-			Checker.throwException(Checker.isFunctionDefined(functionName), errorMessage);
+			Checker.throwException(!Checker.isFunctionDefined(functionName), errorMessage);
 			
 			String functionType = "f(void->" + typeName.getType() + ")";
 			if (Checker.isFunctionDeclaredGlobaly(functionName)) {
@@ -52,7 +52,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			Checker.throwException(!Checker.isConstantType(typeName.getType()), errorMessage);
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
-			Checker.throwException(Checker.isFunctionDefined(functionName), errorMessage);
+			Checker.throwException(!Checker.isFunctionDefined(functionName), errorMessage);
 			
 			ParameterList parameterList = (ParameterList) children.get(3);
 			

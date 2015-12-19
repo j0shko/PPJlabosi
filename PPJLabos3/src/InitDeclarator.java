@@ -30,7 +30,7 @@ public class InitDeclarator extends TreeNode implements ICheckable {
 			
 			directDeclarator.check();
 			
-			Checker.throwException(Checker.isConstantType(directDeclarator.getType()), errorMessage);
+			Checker.throwException(!Checker.isConstantType(directDeclarator.getType()), errorMessage);
 		} else {
 			// <izravni_deklarator> OP_PRIDRUZI <inicijalizator>
 			String errorMessage = "<init_deklarator> ::= <izravni_deklarator> " + children.get(1) + " <inicijalizator>";

@@ -20,7 +20,7 @@ public class ArgumentList extends TreeNode implements ICheckable {
 		if (children.size() == 1) {
 			// <izraz_pridruzivanja> 
 			
-			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(0);
 			assignmentExpression.check();
 			types.add(assignmentExpression.getType());
 		} else {

@@ -88,7 +88,13 @@ public class GenerativeTree {
 			data = new NonTerminalSignData(line);
 		} else {
 			String[] lineStuff = line.split(" ");
-			data = new TerminalSignData(lineStuff[0], Integer.parseInt(lineStuff[1]), lineStuff[2]);
+			String name = lineStuff[0];
+			int lineNum = Integer.parseInt(lineStuff[1]);
+			String value = "";
+			for (int i = 2; i < lineStuff.length; i++) {
+				value += lineStuff[i];
+			}
+			data = new TerminalSignData(name, lineNum, value);
 		}
 		switch (line) {
 		case "<primarni_izraz>" : return new PrimaryExpression(data);

@@ -26,6 +26,8 @@ public class ParameterDeclaration extends TreeNode implements ICheckable {
 			String errorMessage = "<deklaracija_parametra> ::= <ime_tipa> " + children.get(1);
 			
 			TypeName typeName = (TypeName) children.get(0);
+			
+			typeName.check();
 			Checker.throwException(!typeName.getType().equals("void"), errorMessage);
 			
 			name = ((TerminalSignData) children.get(1).getData()).getValue();
@@ -36,6 +38,7 @@ public class ParameterDeclaration extends TreeNode implements ICheckable {
 									+ " " + children.get(2) + " " + children.get(3);
 			
 			TypeName typeName = (TypeName) children.get(0);
+			typeName.check();
 			Checker.throwException(!typeName.getType().equals("void"), errorMessage);
 			
 			name = ((TerminalSignData) children.get(1).getData()).getValue();

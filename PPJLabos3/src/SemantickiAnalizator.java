@@ -25,10 +25,12 @@ public class SemantickiAnalizator {
 			System.out.println(e.getMessage());
 		}
 		
-		if (Scope.globalScope.containsFunction("main") && Scope.globalScope.getFunction("main").getType() == "f(void->int)") {
+		if (!Scope.globalScope.containsFunction("main") || !Scope.globalScope.getFunction("main").getType().equals("f(void->int)")) {
 			System.out.println("main");
 		} else {
-			
+			if (!Scope.globalScope.checkIfAllFunctionsAreDefined()) {
+				System.out.println("funkcija");
+			}
 		}
 	}
 }

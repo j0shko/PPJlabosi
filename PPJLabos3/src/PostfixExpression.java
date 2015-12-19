@@ -58,7 +58,7 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 			type = Checker.getFunctionReturnValue(postfixExpression.getType());
 			lExpression = false;
 		} else if (children.size() == 4) {
-			if (children.get(1).getData().getName() == "L_ZAGRADA") {
+			if (children.get(1).getData().getName().equals("L_ZAGRADA")) {
 				// <postfiks_izraz> L_ZAGRADA <lista_argumenata> D_ZAGRADA
 				
 				errorMessage = "<postfiks_izraz> ::= <postfiks_izraz> " + children.get(1)
@@ -75,7 +75,7 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 				List<String> params = Checker.getFunctionParameters(postfixExpression.getType());
 				List<String> args = argumentList.getTypes();
 				
-				Checker.throwException(params.size() != args.size(), errorMessage);
+				Checker.throwException(params.size() == args.size(), errorMessage);
 				for (int i = 0; i < params.size(); i++) {
 					Checker.throwException(Checker.checkTildaOperator(params.get(i), args.get(i)), errorMessage);
 				}

@@ -35,10 +35,10 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 			// IDN
 			String errorMessage = "<izravni_deklarator> ::= " + children.get(0);
 			
-			Checker.throwException(nType != "void", errorMessage);
+			Checker.throwException(!nType.equals("void"), errorMessage);
 			
 			String name = ((TerminalSignData) children.get(0).getData()).getValue();
-			Checker.throwException(Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
+			Checker.throwException(!Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
 			
 			Scope.currentScope.addIdentificator(name, nType, true);
 			
@@ -49,17 +49,17 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
 										+ " " + children.get(2) + " " + children.get(3);
 					
-				Checker.throwException(nType != "void", errorMessage);
+				Checker.throwException(!nType.equals("void"), errorMessage);
 						
 				String name = ((TerminalSignData) children.get(0).getData()).getValue();
-				Checker.throwException(Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
+				Checker.throwException(!Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
 				
 				String sizeNumber = ((TerminalSignData) children.get(2).getData()).getValue();
 				Checker.throwException(Checker.checkArraySizeInteger(sizeNumber), errorMessage);
 				
 				elementCount = Integer.parseInt(sizeNumber);
 				
-				String type = nType + "[]";
+				this.type = nType + "[]";
 				Scope.currentScope.addIdentificator(name, type, true);
 			} else if (children.get(2).getData().getName().equals("KR_VOID")) {
 				// IDN L_ZAGRADA KR_VOID D_ZAGRADA
@@ -67,11 +67,12 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 										+ " " + children.get(2) + " " + children.get(3);
 				
 				String name = ((TerminalSignData) children.get(0).getData()).getValue();
-				String type = "f(void->" + nType + ")";
+				this.type = "f(void->" + nType + ")";
 				if (Checker.isFunctionDeclaredLocaly(name)) {
-					Checker.throwException(Checker.getFunction(name).getType() == type, errorMessage);
+					Checker.throwException(Checker.getFunction(name).getType().equals(type), errorMessage);
+				} else {
+					Scope.currentScope.addFunction(name, type, false);
 				}
-				Scope.currentScope.addFunction(name, type, false);
 			} else {
 				// IDN L_ZAGRADA <lista_parametara> D_ZAGRADA
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
@@ -86,14 +87,15 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				for (ParameterList.Parameter parameter : parameterList.getParameters()) {
 					typeBuffer.append(parameter.getType() + ",");
 				}
-				typeBuffer.deleteCharAt(typeBuffer.length());
+				typeBuffer.deleteCharAt(typeBuffer.length() - 1);
 				typeBuffer.append("->").append(nType).append(")");
-				String type = typeBuffer.toString();
+				this.type = typeBuffer.toString();
 				
 				if (Checker.isFunctionDeclaredLocaly(name)) {
-					Checker.throwException(Checker.getFunction(name).getType() == type, errorMessage);
+					Checker.throwException(Checker.getFunction(name).getType().equals(type), errorMessage);
+				} else {
+					Scope.currentScope.addFunction(name, type, false);
 				}
-				Scope.currentScope.addFunction(name, type, false);
 			}
 		}
 	}
