@@ -22,13 +22,19 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			Checker.throwException(!Checker.isConstantType(typeName.getType()), errorMessage);
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
-			Checker.throwException(!Checker.isFunctionDefined(functionName), errorMessage);
 			
 			String functionType = "f(void->" + typeName.getType() + ")";
+			
+			if (Checker.isNameDeclaredLocaly(functionName)) {
+				Checker.throwException(Checker.getTypeForName(functionName).equals(functionType), errorMessage);;
+			}
+			Checker.throwException(!Checker.isFunctionDefined(functionName), errorMessage);
+			
 			if (Checker.isFunctionDeclaredGlobaly(functionName)) {
 				Checker.throwException(Checker.checkGlobalDeclaration(functionName, functionType), errorMessage);
 			}
 			Scope.currentScope.addFunction(functionName, functionType, true);
+			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
@@ -72,6 +78,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable {
 			}
 			
 			Scope.currentScope.addFunction(functionName, functionType, true);
+			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);

@@ -92,8 +92,9 @@ public class GenerativeTree {
 			int lineNum = Integer.parseInt(lineStuff[1]);
 			String value = "";
 			for (int i = 2; i < lineStuff.length; i++) {
-				value += lineStuff[i];
+				value += lineStuff[i] + " ";
 			}
+			value = value.substring(0, value.length() - 1);
 			data = new TerminalSignData(name, lineNum, value);
 		}
 		switch (line) {

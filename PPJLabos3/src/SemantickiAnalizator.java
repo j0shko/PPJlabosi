@@ -23,6 +23,7 @@ public class SemantickiAnalizator {
 			((ICheckable) tree.getRoot()).check();
 		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
+			return;
 		}
 		
 		if (!Scope.globalScope.containsFunction("main") || !Scope.globalScope.getFunction("main").getType().equals("f(void->int)")) {

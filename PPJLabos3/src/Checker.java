@@ -19,8 +19,8 @@ public class Checker {
 		TILDA.put("void", Arrays.asList("void"));
 		TILDA.put("int[]", Arrays.asList("int[]", "const(int)[]"));
 		TILDA.put("char[]", Arrays.asList("char[]", "const(char)[]"));
-		TILDA.put("const(int)[]", Arrays.asList("const(int)[]", "int[]"));
-		TILDA.put("const(char)[]", Arrays.asList("const(char)[]", "char[]"));
+		TILDA.put("const(int)[]", Arrays.asList("const(int)[]"));
+		TILDA.put("const(char)[]", Arrays.asList("const(char)[]"));
 		
 		CAST.put("char", Arrays.asList("char", "int", "const(char)", "const(int)"));
 		CAST.put("int", Arrays.asList("char", "int", "const(char)", "const(int)"));
@@ -29,12 +29,29 @@ public class Checker {
 	}
 	
 	public static boolean checkInteger(String value) {
-		try {
-			Integer.parseInt(value);
-		} catch (NumberFormatException ex) {
-			return false;
+		if (value.startsWith("0x") || value.startsWith("0X")) {
+			try {
+				Integer.parseInt(value.substring(2), 16);
+			} catch (NumberFormatException ex) {
+				return false;
+			}
+		} else {
+			try {
+				Integer.parseInt(value);
+			} catch (NumberFormatException ex) {
+				return false;
+			}
 		}
+		
 		return true;
+	}
+	
+	public static int getNumberValue(String value) {
+		if (value.startsWith("0x") || value.startsWith("0X")) {
+			return Integer.parseInt(value.substring(2), 16);
+		} else {
+			return Integer.parseInt(value);
+		}
 	}
 	
 	public static boolean checkArraySizeInteger(String value) {
@@ -52,6 +69,9 @@ public class Checker {
 		}
 		
 		String val = value.substring(1, value.length() - 1);
+		if (val.equals("\\") || val.equals("\'")) {
+			return false;
+		}
 		if (LEGAL_CONST_CHARS.contains(val)) {
 			return true;
 		}
@@ -69,14 +89,43 @@ public class Checker {
 		for (int i = 0; i < val.length(); ++i) {
 			char c = val.charAt(i);
 			if (c == '\\') {
+				if (i + 2 > val.length()) {
+					return false;
+				}
 				String temp = val.substring(i, i + 2);
 				if (!LEGAL_CONST_CHARS.contains(temp)) {
 					return false;
 				}
 				i++;
 			} 
+			if (c == '\"') {
+				return false;
+			}
 		}
 		return true;
+	}
+	
+	public static String removeEscapes(String value) {
+		String output = "";
+		for (int i = 0; i < value.length(); ++i) {
+			char c = value.charAt(i);
+			if (c == '\\') {
+				String temp = value.substring(i, i + 2);
+				switch (temp) {
+				case "\\t" : output += '\t'; break;
+				case "\\n" : output += '\n'; break;
+				case "\\0" : output += '\0'; break;
+				case "\\'" : output += '\''; break;
+				case "\\\"" : output += '\"' ; break;
+				case "\\\\" : output += '\\'; break;
+				}
+				i++;
+			} else {
+				output += c;
+			}
+		}
+		
+		return output;
 	}
 	
 	// ------------------- type checks ----------------------
@@ -132,7 +181,7 @@ public class Checker {
 	
 	public static boolean isFunctionWithParams(String functionType) {
 		List<String> params = getFunctionParameters(functionType);
-		return params.get(0) != "void";
+		return !params.get(0).equals("void");
 	}
 	
 	public static String getFunctionReturnValue(String type) {
@@ -176,7 +225,55 @@ public class Checker {
 		}
 	}
 	
+	public static boolean canBeLExpression(String type) {
+		if (Checker.isFunction(type)) {
+			return false;
+		}
+		if (Checker.isConstantType(type)) {
+			return false;
+		}
+		if (Checker.isArrayType(type)) {
+			return false;
+		}
+		return true;
+	}
+	
 	// ------------------------ Scope orienteded checks ----------------------------
+	
+	public static boolean isNameDeclared(String name) {
+		Scope currentScope = Scope.currentScope;
+		while (currentScope != null) {
+			if (currentScope.containsIdentificator(name)) {
+				return true;
+			} else if (currentScope.containsFunction(name)) {
+				return true;
+			}
+			currentScope = currentScope.getParentScope();
+		}
+		return false;
+	}
+	
+	public static boolean isNameDeclaredLocaly(String name) {
+		if (Scope.currentScope.containsIdentificator(name)) {
+			return true;
+		} else if (Scope.currentScope.containsFunction(name)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static String getTypeForName(String name) {
+		Scope currentScope = Scope.currentScope;
+		while (currentScope != null) {
+			if (currentScope.containsIdentificator(name)) {
+				return currentScope.getIdentificator(name).getType();
+			} else if (currentScope.containsFunction(name)) {
+				return currentScope.getFunction(name).getType();
+			}
+			currentScope = currentScope.getParentScope();
+		}
+		return null;
+	}
 	
 	public static boolean isIdentificatorDeclared(String name) {
 		Scope currentScope = Scope.currentScope;
@@ -301,5 +398,19 @@ public class Checker {
 	public static boolean isInsideNonVoidFunction() {
 		String type = getReturnValueOfScopeFunction();
 		return type != null && !type.equals("void");
+	}
+	
+	public static void setFunctionDefinition(String name, String type, Scope scope) {
+		if (scope.containsFunction(name)) {
+			Scope.FunctionData function = scope.getFunction(name);
+			if (function.getType().equals(type)) {
+				scope.addFunction(name, type, true);
+			}
+		}
+		
+		for (Scope childScope : scope.getChildScopes()) {
+			Checker.setFunctionDefinition(name, type, childScope);
+		}
+			
 	}
 }

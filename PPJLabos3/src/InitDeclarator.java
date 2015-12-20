@@ -48,6 +48,7 @@ public class InitDeclarator extends TreeNode implements ICheckable {
 			if (Checker.isNumber(directDeclarator.getType())) {
 				Checker.throwException(Checker.checkTildaOperator(initialisator.getType(), type), errorMessage);
 			} else if (Checker.isNumberArray(directDeclarator.getType())) {
+				Checker.throwException(initialisator.getType() == null, errorMessage);
 				Checker.throwException(initialisator.getTypes().size() <= directDeclarator.getElementCount(), errorMessage);
 				for (String initType : initialisator.getTypes()) {
 					Checker.throwException(Checker.checkTildaOperator(initType, type), errorMessage);

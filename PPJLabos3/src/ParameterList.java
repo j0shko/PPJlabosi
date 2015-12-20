@@ -37,7 +37,7 @@ public class ParameterList extends TreeNode implements ICheckable {
 	
 	public boolean containsParameter(String name) {
 		for (Parameter parameter : parameters) {
-			if (parameter.name == name) {
+			if (parameter.name.equals(name)) {
 				return true;
 			}
 		}

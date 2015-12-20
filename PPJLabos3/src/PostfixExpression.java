@@ -53,7 +53,8 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 			
 			postfixExpression.check();
 			
-			Checker.throwException(Checker.isFunctionWithParams(postfixExpression.getType()), errorMessage);
+			Checker.throwException(Checker.isFunction(postfixExpression.getType()), errorMessage);
+			Checker.throwException(!Checker.isFunctionWithParams(postfixExpression.getType()), errorMessage);
 			
 			type = Checker.getFunctionReturnValue(postfixExpression.getType());
 			lExpression = false;
@@ -70,6 +71,7 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 				ArgumentList argumentList = (ArgumentList) children.get(2);
 				argumentList.check();
 				
+				Checker.throwException(Checker.isFunction(postfixExpression.getType()), errorMessage);
 				Checker.throwException(Checker.isFunctionWithParams(postfixExpression.getType()), errorMessage);
 				
 				List<String> params = Checker.getFunctionParameters(postfixExpression.getType());
@@ -77,7 +79,7 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 				
 				Checker.throwException(params.size() == args.size(), errorMessage);
 				for (int i = 0; i < params.size(); i++) {
-					Checker.throwException(Checker.checkTildaOperator(params.get(i), args.get(i)), errorMessage);
+					Checker.throwException(Checker.checkTildaOperator(args.get(i), params.get(i)), errorMessage);
 				}
 				
 				type = Checker.getFunctionReturnValue(postfixExpression.getType());
@@ -99,7 +101,7 @@ public class PostfixExpression extends TreeNode implements ICheckable {
 				Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorMessage);
 				String arrayType = Checker.getArrayType(postfixExpression.getType());
 				type = arrayType;
-				lExpression = Checker.isConstantType(arrayType);
+				lExpression = !Checker.isConstantType(arrayType);
 			}
 		}
 	}

@@ -31,17 +31,13 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 			switch (first.getData().getName()) {
 			case "IDN":
 				// TODO vamo bi moglo još grešaka zapast
-				boolean identificatorDeclared = Checker.isIdentificatorDeclared(value);
-				boolean functionDeclared = Checker.isFunctionDeclared(value);
-				Checker.throwException(identificatorDeclared || functionDeclared, errorMessage);
-				if (identificatorDeclared) {
-					Scope.IdentificatorData identificator = Checker.getIdentificator(value);
-					type = identificator.getType();
-					lExpression = identificator.islExpression();
-				} else {
-					Scope.FunctionData function = Checker.getFunction(value);
-					type = function.getType();
+				Checker.throwException(Checker.isNameDeclared(value), errorMessage);
+				String indetificatorType = Checker.getTypeForName(value);
+				type = indetificatorType;
+				if (Checker.isFunction(type)) {
 					lExpression = false;
+				} else {
+					lExpression = Checker.getIdentificator(value).islExpression(); 
 				}
 				
 				break;
@@ -58,7 +54,8 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 			case "NIZ_ZNAKOVA":
 				Checker.throwException(Checker.checkString(value), errorMessage);
 				if (Initialisator.initialisatorCalled) {
-					Initialisator.string = value;
+					value = Checker.removeEscapes(value);
+					Initialisator.string = value.substring(1, value.length() - 1);
 				}
 				type = "const(char)[]";
 				lExpression = false;

@@ -38,9 +38,10 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 			Checker.throwException(!nType.equals("void"), errorMessage);
 			
 			String name = ((TerminalSignData) children.get(0).getData()).getValue();
-			Checker.throwException(!Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
+			Checker.throwException(!Checker.isNameDeclaredLocaly(name), errorMessage);
 			
-			Scope.currentScope.addIdentificator(name, nType, true);
+			boolean lExpression = Checker.canBeLExpression(nType);
+			Scope.currentScope.addIdentificator(name, nType, lExpression);
 			
 			type = nType;
 		} else {
@@ -52,15 +53,15 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				Checker.throwException(!nType.equals("void"), errorMessage);
 						
 				String name = ((TerminalSignData) children.get(0).getData()).getValue();
-				Checker.throwException(!Checker.isIdentificatorDeclaredLocaly(name), errorMessage);
+				Checker.throwException(!Checker.isNameDeclaredLocaly(name), errorMessage);
 				
 				String sizeNumber = ((TerminalSignData) children.get(2).getData()).getValue();
 				Checker.throwException(Checker.checkArraySizeInteger(sizeNumber), errorMessage);
 				
-				elementCount = Integer.parseInt(sizeNumber);
+				elementCount = Checker.getNumberValue(sizeNumber);
 				
 				this.type = nType + "[]";
-				Scope.currentScope.addIdentificator(name, type, true);
+				Scope.currentScope.addIdentificator(name, type, false);
 			} else if (children.get(2).getData().getName().equals("KR_VOID")) {
 				// IDN L_ZAGRADA KR_VOID D_ZAGRADA
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
@@ -71,7 +72,8 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				if (Checker.isFunctionDeclaredLocaly(name)) {
 					Checker.throwException(Checker.getFunction(name).getType().equals(type), errorMessage);
 				} else {
-					Scope.currentScope.addFunction(name, type, false);
+					boolean defined = Checker.isFunctionDefined(name);
+					Scope.currentScope.addFunction(name, type, defined);
 				}
 			} else {
 				// IDN L_ZAGRADA <lista_parametara> D_ZAGRADA
@@ -94,7 +96,8 @@ public class DirectDeclarator extends TreeNode implements ICheckable {
 				if (Checker.isFunctionDeclaredLocaly(name)) {
 					Checker.throwException(Checker.getFunction(name).getType().equals(type), errorMessage);
 				} else {
-					Scope.currentScope.addFunction(name, type, false);
+					boolean defined = Checker.isFunctionDefined(name);
+					Scope.currentScope.addFunction(name, type, defined);
 				}
 			}
 		}

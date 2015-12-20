@@ -22,6 +22,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command = (Command) children.get(4);
 			
@@ -40,6 +41,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command1 = (Command) children.get(4);
 			
@@ -49,6 +51,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			
 			parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope);
+			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command2 = (Command) children.get(6);
 						
