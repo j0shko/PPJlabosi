@@ -30,7 +30,6 @@ public class PrimaryExpression extends TreeNode implements ICheckable {
 			String value = ((TerminalSignData) first.getData()).getValue();
 			switch (first.getData().getName()) {
 			case "IDN":
-				// TODO vamo bi moglo još grešaka zapast
 				Checker.throwException(Checker.isNameDeclared(value), errorMessage);
 				String indetificatorType = Checker.getTypeForName(value);
 				type = indetificatorType;
