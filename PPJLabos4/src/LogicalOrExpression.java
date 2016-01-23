@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class LogicalOrExpression  extends TreeNode implements ICheckable {
+public class LogicalOrExpression  extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -46,5 +46,11 @@ public class LogicalOrExpression  extends TreeNode implements ICheckable {
 			type = "int";
 			lExpression = false;
 		}
+	}
+	
+	@Override
+	public void generateCode() {
+		// TODO Auto-generated method stub
+		
 	}
 }

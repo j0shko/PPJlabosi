@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class PostfixExpression extends TreeNode implements ICheckable {
+public class PostfixExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;

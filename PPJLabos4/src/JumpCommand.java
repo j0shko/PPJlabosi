@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class JumpCommand extends TreeNode implements ICheckable {
+public class JumpCommand extends TreeNode implements ICheckable, IGeneratable {
 
 	public JumpCommand(TreeNodeData data) {
 		super(data);
@@ -35,5 +35,27 @@ public class JumpCommand extends TreeNode implements ICheckable {
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), functionType), errorMessage);
 		}
 
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 2) {
+			if (children.get(0).getData().getName().equals("KR_RETURN")) {
+				// KR_RETURN TOCKAZAREZ
+				// TODO rješi
+			} else {
+				// (KR_CONTINUE | KR_BREAK) TOCKAZAREZ
+				// TODO rješi
+			}
+		} else {
+			// KR_RETURN <izraz> TOCKAZAREZ
+			Expression expression = (Expression) children.get(1);
+			
+			expression.generateCode();
+			
+			GeneratorKoda.lines.add("\tPOP R6");
+			GeneratorKoda.lines.add("\tRET");
+		}
 	}
 }

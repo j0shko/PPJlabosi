@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class DeclarationList extends TreeNode implements ICheckable {
+public class DeclarationList extends TreeNode implements ICheckable, IGeneratable {
 
 	public DeclarationList(TreeNodeData data) {
 		super(data);
@@ -24,5 +24,11 @@ public class DeclarationList extends TreeNode implements ICheckable {
 			
 			declaration.check();
 		}
+	}
+	
+	@Override
+	public void generateCode() {
+		// TODO Auto-generated method stub
+		
 	}
 }

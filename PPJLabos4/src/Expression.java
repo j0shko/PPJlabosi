@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Expression extends TreeNode implements ICheckable {
+public class Expression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -41,6 +41,26 @@ public class Expression extends TreeNode implements ICheckable {
 			
 			type = assignmentExpression.getType();
 			lExpression = false;
+		}
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <izraz_pridruzivanja>
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(0);
+			
+			assignmentExpression.generateCode();
+		} else {
+			// <izraz> ZAREZ <izraz_pridruzivanja>
+			Expression expression = (Expression) children.get(0);
+			
+			expression.generateCode();
+						
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
+			
+			assignmentExpression.generateCode();
 		}
 	}
 }

@@ -10,6 +10,8 @@ import java.util.List;
 
 
 public class GeneratorKoda {
+	
+	public static List<String> lines;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,9 +26,9 @@ public class GeneratorKoda {
 		GenerativeTree tree = new GenerativeTree(text);
 
 		
-		List<String> lines = new ArrayList<>();
+		lines = new ArrayList<>();
 		
-		lines.add("\tMOVE 40000. R7");
+		lines.add("\tMOVE 40000, R7");
 		lines.add("\tCALL F_MAIN");
 		lines.add("\tHALT");
 		

@@ -105,9 +105,17 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 			// <ime_tipa> IDN L_ZAGRADA KR_VOID D_ZAGRADA <slozena_naredba>
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
+			functionName = functionName.toUpperCase();
+			
+			GeneratorKoda.lines.add("F_" + functionName + "\tMOVE R0,R0");
+			
+			ComplexCommand complexCommand = (ComplexCommand) children.get(5);
+			
+			complexCommand.generateCode();
 		} else {
 			// <ime_tipa> IDN L_ZAGRADA <lista_parametara> D_ZAGRADA <slozena_naredba>
 			
+			//TODO rješi
 		}
 	}
 }

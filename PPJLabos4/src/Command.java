@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Command extends TreeNode implements ICheckable {
+public class Command extends TreeNode implements ICheckable, IGeneratable {
 
 	public Command(TreeNodeData data) {
 		super(data);
@@ -24,5 +24,13 @@ public class Command extends TreeNode implements ICheckable {
 		} else {
 			command.check();
 		}
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		
+		IGeneratable command = (IGeneratable) children.get(0);
+		command.generateCode();
 	}
 }
