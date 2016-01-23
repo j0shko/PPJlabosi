@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class BinaryOrExpression extends TreeNode implements ICheckable {
+public class BinaryOrExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -47,5 +47,26 @@ public class BinaryOrExpression extends TreeNode implements ICheckable {
 			lExpression = false;
 		}
 
+	}
+
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <bin_xili_izraz>
+			
+			BinaryXorExpression binaryXorExpression = (BinaryXorExpression) children.get(0);
+			
+			binaryXorExpression.generateCode();
+		} else {
+			// <bin_ili_izraz> OP_BIN_ILI <bin_xili_izraz>
+			BinaryOrExpression binaryOrExpression = (BinaryOrExpression) children.get(0);
+			
+			binaryOrExpression.generateCode();
+			
+			BinaryXorExpression binaryXorExpression = (BinaryXorExpression) children.get(2);
+			
+			binaryXorExpression.generateCode();
+		}
 	}
 }

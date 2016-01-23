@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class MultiplicativeExpression extends TreeNode implements ICheckable {
+public class MultiplicativeExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -47,6 +47,28 @@ public class MultiplicativeExpression extends TreeNode implements ICheckable {
 			
 			type = "int";
 			lExpression = false;
+		}
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <cast_izraz>
+			
+			CastExpression castExpression = (CastExpression) children.get(0);
+			
+			castExpression.generateCode();
+		} else {
+			// <multiplikativni_izraz> (OP_PUTA | OP_DIJELI | OP_MOD) <cast_izraz>
+			// TODO isto posla oko množenja i djeljenja
+			MultiplicativeExpression multiplicativeExpression = (MultiplicativeExpression) children.get(0);
+			
+			multiplicativeExpression.generateCode();
+			
+			CastExpression castExpression = (CastExpression) children.get(2);
+			
+			castExpression.generateCode();
 		}
 	}
 }

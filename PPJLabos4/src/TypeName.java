@@ -1,7 +1,6 @@
 import java.util.List;
 
-
-public class TypeName extends TreeNode implements ICheckable {
+public class TypeName extends TreeNode implements ICheckable, IGeneratable {
 	
 	private String type;
 	
@@ -38,4 +37,9 @@ public class TypeName extends TreeNode implements ICheckable {
 		}
 	}
 
+	@Override
+	public void generateCode() {
+		// TODO Auto-generated method stub
+		
+	}
 }

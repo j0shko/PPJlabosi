@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class UnaryExpression extends TreeNode implements ICheckable {
+public class UnaryExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -58,4 +58,27 @@ public class UnaryExpression extends TreeNode implements ICheckable {
 
 	}
 
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		
+		if (children.size() == 1) {
+			// <postfiks_izraz>
+			PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
+			
+			postfixExpression.generateCode();
+		} else {
+			if (children.get(0).getData().getName().equals("<unarni_operator>")) {
+				// <unarni_operator> <cast_izraz>
+				CastExpression castExpression = (CastExpression) children.get(1);
+				
+				castExpression.generateCode();
+			} else {
+				// (OP_INC | OP_DEC) <unarni_izraz>
+				UnaryExpression unaryExpression = (UnaryExpression) children.get(1);
+				
+				unaryExpression.generateCode();
+			}
+		}
+	}
 }

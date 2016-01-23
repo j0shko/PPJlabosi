@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GeneratorKoda {
 	
 	public static List<String> lines;
@@ -25,12 +24,13 @@ public class GeneratorKoda {
 
 		GenerativeTree tree = new GenerativeTree(text);
 
-		
 		lines = new ArrayList<>();
 		
 		lines.add("\tMOVE 40000, R7");
 		lines.add("\tCALL F_MAIN");
 		lines.add("\tHALT");
+
+		((IGeneratable) tree.getRoot()).generateCode();
 		
 		Path outputFile = Paths.get("a.frisc");
 		Files.write(outputFile, lines, Charset.forName("UTF-8"));

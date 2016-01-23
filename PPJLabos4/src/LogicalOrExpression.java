@@ -50,7 +50,22 @@ public class LogicalOrExpression  extends TreeNode implements ICheckable, IGener
 	
 	@Override
 	public void generateCode() {
-		// TODO Auto-generated method stub
-		
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <log_i_izraz>
+			
+			LogicalAndExpression logicalAndExpression = (LogicalAndExpression) children.get(0);
+			
+			logicalAndExpression.generateCode();
+		} else {
+			// <log_ili_izraz> OP_ILI <log_i_izraz>
+			LogicalOrExpression logicalOrExpression = (LogicalOrExpression) children.get(0);
+			
+			logicalOrExpression.generateCode();
+			
+			LogicalAndExpression logicalAndExpression = (LogicalAndExpression) children.get(2);
+			
+			logicalAndExpression.generateCode();
+		}
 	}
 }

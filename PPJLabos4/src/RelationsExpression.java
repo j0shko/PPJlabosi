@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class RelationsExpression extends TreeNode implements ICheckable {
+public class RelationsExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -50,4 +50,26 @@ public class RelationsExpression extends TreeNode implements ICheckable {
 
 	}
 
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <aditivni_izraz>
+			
+			AditiveExpression aditiveExpression = (AditiveExpression) children.get(0);
+			
+			aditiveExpression.generateCode();
+		} else {
+			// <odnosni_izraz> (OP_LT | OP_GT | OP_LTE | OP_GTE) <aditivni_izraz>
+			// TODO dosta posla oko izraza
+			RelationsExpression relationsExpression = (RelationsExpression) children.get(0);
+			
+			relationsExpression.generateCode();
+			
+			AditiveExpression aditiveExpression = (AditiveExpression) children.get(2);
+			
+			aditiveExpression.generateCode();
+		}
+	}
+	
 }

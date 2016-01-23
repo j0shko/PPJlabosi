@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class BinaryAndExpression extends TreeNode implements ICheckable {
+public class BinaryAndExpression extends TreeNode implements ICheckable, IGeneratable{
 
 	private String type;
 	private boolean lExpression;
@@ -48,5 +48,26 @@ public class BinaryAndExpression extends TreeNode implements ICheckable {
 			lExpression = false;
 		}
 
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <jednakosni_izraz>
+			
+			EqualsExpression equalsExpression = (EqualsExpression) children.get(0);
+			
+			equalsExpression.generateCode();
+		} else {
+			// <bin_i_izraz> OP_BIN_I <jednakosni_izraz>
+			BinaryAndExpression binaryAndExpression = (BinaryAndExpression) children.get(0);
+			
+			binaryAndExpression.generateCode();
+			
+			EqualsExpression equalsExpression = (EqualsExpression) children.get(2);
+			
+			equalsExpression.generateCode();
+		}
 	}
 }

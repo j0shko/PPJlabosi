@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArgumentList extends TreeNode implements ICheckable {
+public class ArgumentList extends TreeNode implements ICheckable, IGeneratable {
 
 	private List<String> types = new ArrayList<>();
 	
@@ -36,4 +36,9 @@ public class ArgumentList extends TreeNode implements ICheckable {
 		}
 	}
 
+	@Override
+	public void generateCode() {
+		// TODO Auto-generated method stub
+		
+	}
 }

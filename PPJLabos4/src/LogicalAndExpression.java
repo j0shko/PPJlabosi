@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class LogicalAndExpression extends TreeNode implements ICheckable {
+public class LogicalAndExpression extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	private boolean lExpression;
@@ -47,5 +47,26 @@ public class LogicalAndExpression extends TreeNode implements ICheckable {
 			lExpression = false;
 		}
 
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <bin_ili_izraz>
+			
+			BinaryOrExpression binaryOrExpression = (BinaryOrExpression) children.get(0);
+			
+			binaryOrExpression.generateCode();
+		} else {
+			// <log_i_izraz> OP_I <bin_ili_izraz>
+			LogicalAndExpression logicalAndExpression = (LogicalAndExpression) children.get(0);
+			
+			logicalAndExpression.generateCode();
+			
+			BinaryOrExpression binaryOrExpression = (BinaryOrExpression) children.get(2);
+			
+			binaryOrExpression.generateCode();
+		}
 	}
 }
