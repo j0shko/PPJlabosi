@@ -3,6 +3,8 @@ import java.util.List;
 
 public class LoopCommand extends TreeNode implements ICheckable {
 
+	public static int loopCount = 0;
+	
 	public LoopCommand(TreeNodeData data) {
 		super(data);
 	}
@@ -21,7 +23,8 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorString);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "WHILE" + loopCount);
+			loopCount++;
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
@@ -45,7 +48,8 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			Checker.throwException(Checker.checkTildaOperator(expressionCommand2.getType(), "int"), errorString);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "FOR" + loopCount);
+			loopCount++;
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
@@ -73,7 +77,8 @@ public class LoopCommand extends TreeNode implements ICheckable {
 			expression.check();
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "FOR" + loopCount);
+			loopCount++;
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			

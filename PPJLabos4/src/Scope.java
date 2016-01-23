@@ -13,6 +13,8 @@ public class Scope {
 	
 	private String functionType;
 	
+	private String scopeName;
+	
 	private Scope parentScope;
 	private List<Scope> childScopes = new ArrayList<>();
 	
@@ -24,10 +26,14 @@ public class Scope {
 		private String type;
 		private boolean lExpression;
 		
-		public IdentificatorData(String name, String type, boolean lExpression) {
+		private String defaultValue = null;
+		private String label;
+		
+		public IdentificatorData(String name, String type, boolean lExpression, String label) {
 			this.name = name;
 			this.type = type;
 			this.lExpression = lExpression;
+			this.label = label;
 		}
 		
 		public String getName() {
@@ -40,6 +46,18 @@ public class Scope {
 		
 		public boolean islExpression() {
 			return lExpression;
+		}
+		
+		public void setDefaultValue(String value) {
+			this.defaultValue = value;
+		}
+		
+		public String getDefaultValue() {
+			return defaultValue;
+		}
+		
+		public String getLabel() {
+			return label;
 		}
 	}
 	
@@ -71,9 +89,10 @@ public class Scope {
 		}
 	}
 	
-	public Scope(Scope parentScope) {
+	public Scope(Scope parentScope, String scopeName) {
 		isFunction = false;
 		isLoop = false;
+		this.scopeName = scopeName; 
 		this.parentScope = parentScope;
 	}
 	
@@ -134,7 +153,8 @@ public class Scope {
 	}
 	
 	public void addIdentificator(String name, String type, boolean lExpression) {
-		identificatorMap.put(name, new IdentificatorData(name, type, lExpression));
+		String label = this.scopeName.toUpperCase() + "_" + name.toUpperCase();
+		identificatorMap.put(name, new IdentificatorData(name, type, lExpression, label));
 	}
 	
 	public boolean checkIfAllFunctionsAreDefined() {
@@ -149,5 +169,22 @@ public class Scope {
 			defined = defined && subScopes.checkIfAllFunctionsAreDefined();
 		}
 		return defined;
+	}
+	
+	public String getScopeName() {
+		return scopeName;
+	}
+	
+	public void setScopeName(String scopeName) {
+		this.scopeName = scopeName;
+	}
+	
+	public void generateDefinitionLines() {
+		for (IdentificatorData identificator : identificatorMap.values()) {
+			if (identificator.type == "int" || identificator.type == "(const)int") {
+				int value = Integer.parseInt(identificator.defaultValue);
+				GeneratorKoda.lines.add(identificator.label + "\t" + "DW %D " + value);
+			}
+		}
 	}
 }

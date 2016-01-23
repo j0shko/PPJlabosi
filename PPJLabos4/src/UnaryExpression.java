@@ -70,6 +70,10 @@ public class UnaryExpression extends TreeNode implements ICheckable, IGeneratabl
 		} else {
 			if (children.get(0).getData().getName().equals("<unarni_operator>")) {
 				// <unarni_operator> <cast_izraz>
+				UnaryOperator unaryOperator = (UnaryOperator) children.get(0);
+				
+				unaryOperator.generateCode();
+				
 				CastExpression castExpression = (CastExpression) children.get(1);
 				
 				castExpression.generateCode();

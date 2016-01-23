@@ -39,7 +39,23 @@ public class TypeName extends TreeNode implements ICheckable, IGeneratable {
 
 	@Override
 	public void generateCode() {
-		// TODO Auto-generated method stub
+		List<TreeNode> children = getChildren();
 		
+		if (children.size() == 1) {
+			// <specifikator_tipa>
+			
+			TypeSpecificator typeSpecificator = (TypeSpecificator) children.get(0);
+			
+			typeSpecificator.generateCode();
+			
+			type = typeSpecificator.getType();
+		} else {
+			// KR_CONST <specifikator_tipa>
+			TypeSpecificator typeSpecificator = (TypeSpecificator) children.get(1);
+			
+			typeSpecificator.generateCode();
+			
+			type = "const(" + typeSpecificator.getType() + ")";
+		}
 	}
 }

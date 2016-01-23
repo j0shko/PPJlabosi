@@ -66,6 +66,18 @@ public class AditiveExpression extends TreeNode implements ICheckable, IGenerata
 			MultiplicativeExpression multiplicativeExpression = (MultiplicativeExpression) children.get(2);
 			
 			multiplicativeExpression.generateCode();
+			
+			if (children.get(1).getData().getName().equals("PLUS")) {
+				GeneratorKoda.lines.add("\tPOP R0"); // load multiplicativeExpression result
+				GeneratorKoda.lines.add("\tPOP R1"); // load aditiveExpression result
+				GeneratorKoda.lines.add("\tADD R1, R0, R0");
+				GeneratorKoda.lines.add("\tPUSH R0");
+			} else {
+				GeneratorKoda.lines.add("\tPOP R0"); // load multiplicativeExpression result
+				GeneratorKoda.lines.add("\tPOP R1"); // load aditiveExpression result
+				GeneratorKoda.lines.add("\tSUB R1, R0, R0");
+				GeneratorKoda.lines.add("\tPUSH R0");
+			}
 		}
 	}
 

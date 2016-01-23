@@ -3,6 +3,8 @@ import java.util.List;
 
 public class BranchCommand extends TreeNode implements ICheckable {
 
+	public static int ifCounter = 0;
+	
 	public BranchCommand(TreeNodeData data) {
 		super(data);
 	}
@@ -21,7 +23,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorMessage);
 
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "IF" + ifCounter);
 			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command = (Command) children.get(4);
@@ -40,7 +42,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			Checker.throwException(Checker.checkTildaOperator(expression.getType(), "int"), errorMessage);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "IF" + ifCounter);
 			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command1 = (Command) children.get(4);
@@ -50,7 +52,7 @@ public class BranchCommand extends TreeNode implements ICheckable {
 			Scope.currentScope = parentScope;
 			
 			parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "ELSE" + ifCounter);
 			parentScope.addChildScope(Scope.currentScope);
 			
 			Command command2 = (Command) children.get(6);

@@ -30,7 +30,10 @@ public class GeneratorKoda {
 		lines.add("\tCALL F_MAIN");
 		lines.add("\tHALT");
 
+		Scope.currentScope = new Scope(null, "G");
+		Scope.globalScope = Scope.currentScope;
 		((IGeneratable) tree.getRoot()).generateCode();
+		Scope.globalScope.generateDefinitionLines();
 		
 		Path outputFile = Paths.get("a.frisc");
 		Files.write(outputFile, lines, Charset.forName("UTF-8"));

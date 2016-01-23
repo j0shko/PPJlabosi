@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class TypeSpecificator extends TreeNode implements ICheckable {
+public class TypeSpecificator extends TreeNode implements ICheckable, IGeneratable {
 
 	private String type;
 	
@@ -14,6 +14,22 @@ public class TypeSpecificator extends TreeNode implements ICheckable {
 	
 	@Override
 	public void check() {
+		List<TreeNode> children = getChildren();
+		switch (children.get(0).getData().getName()) {
+		case "KR_VOID": 
+			type = "void";
+			break;
+		case "KR_CHAR":
+			type = "char";
+			break;
+		case "KR_INT":
+			type = "int";
+			break;
+		}
+	}
+	
+	@Override
+	public void generateCode() {
 		List<TreeNode> children = getChildren();
 		switch (children.get(0).getData().getName()) {
 		case "KR_VOID": 

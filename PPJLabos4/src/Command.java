@@ -5,6 +5,8 @@ public class Command extends TreeNode implements ICheckable, IGeneratable {
 	public Command(TreeNodeData data) {
 		super(data);
 	}
+	
+	public static int complexCommandCount;
 
 	@Override
 	public void check() {
@@ -15,7 +17,7 @@ public class Command extends TreeNode implements ICheckable, IGeneratable {
 		
 		if (children.get(0).getData().getName().equals("<slozena_naredba>")) {
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "CPXCMD" + complexCommandCount + "_");
 			parentScope.addChildScope(Scope.currentScope);
 			
 			command.check();
@@ -31,6 +33,17 @@ public class Command extends TreeNode implements ICheckable, IGeneratable {
 		List<TreeNode> children = getChildren();
 		
 		IGeneratable command = (IGeneratable) children.get(0);
-		command.generateCode();
+		
+		if (children.get(0).getData().getName().equals("<slozena_naredba>")) {
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, "CPXCMD" + complexCommandCount + "_");
+			parentScope.addChildScope(Scope.currentScope);
+			
+			command.generateCode();
+			
+			Scope.currentScope = parentScope;
+		} else {
+			command.generateCode();
+		}
 	}
 }

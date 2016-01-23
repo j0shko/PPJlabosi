@@ -37,7 +37,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "F_" + functionName.toUpperCase());
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setFunction(true);
 			Scope.currentScope.setFunctionType(functionType);
@@ -81,7 +81,7 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope);
+			Scope.currentScope = new Scope(parentScope, "F_" + functionName.toUpperCase());
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setFunction(true);
 			Scope.currentScope.setFunctionType(functionType);
@@ -103,11 +103,21 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 		List<TreeNode> children = getChildren();
 		if (children.get(3).getData().getName().equals("KR_VOID")) {
 			// <ime_tipa> IDN L_ZAGRADA KR_VOID D_ZAGRADA <slozena_naredba>
+			TypeName typeName = (TypeName) children.get(0);
+			
+			typeName.generateCode();
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
 			functionName = functionName.toUpperCase();
+			String functionType = "f(void->" + typeName.getType() + ")";
 			
 			GeneratorKoda.lines.add("F_" + functionName + "\tMOVE R0,R0");
+			
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, "F_" + functionName.toUpperCase());
+			parentScope.addChildScope(Scope.currentScope);
+			Scope.currentScope.setFunction(true);
+			Scope.currentScope.setFunctionType(functionType);
 			
 			ComplexCommand complexCommand = (ComplexCommand) children.get(5);
 			

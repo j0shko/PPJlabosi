@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class InitDeclarator extends TreeNode implements ICheckable {
+public class InitDeclarator extends TreeNode implements ICheckable, IGeneratable {
 
 	private String nType;
 	
@@ -58,6 +58,37 @@ public class InitDeclarator extends TreeNode implements ICheckable {
 			}
 		}
 
+	}
+	
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		
+		if (children.size() == 1) {
+			// <izravni_deklarator>
+			DirectDeclarator directDeclarator = (DirectDeclarator) children.get(0);
+			directDeclarator.setnType(nType);
+			
+			directDeclarator.check();
+		} else {
+			// <izravni_deklarator> OP_PRIDRUZI <inicijalizator>
+			DirectDeclarator directDeclarator = (DirectDeclarator) children.get(0);
+			directDeclarator.setnType(nType);
+			
+			directDeclarator.generateCode();
+			
+			Initialisator initialisator = (Initialisator) children.get(2);
+			
+			initialisator.generateCode();
+			
+			String name = DirectDeclarator.lastName;
+			if (name != null) {
+				Scope.IdentificatorData identificator = Scope.currentScope.getIdentificator(name);
+				identificator.setDefaultValue(Initialisator.value);
+				
+				DirectDeclarator.lastName = null;
+			}
+		}
 	}
 
 }
