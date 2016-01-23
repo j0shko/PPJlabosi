@@ -57,7 +57,7 @@ public class LoopCommand extends TreeNode implements ICheckable {
 		} else if (children.size() == 7) {
 			// KR_FOR L_ZAGRADA <izraz_naredba>1 <izraz_naredba>2 <izraz> D_ZAGRADA <naredba>
 			String errorString = "<naredba_petlje> ::= " + children.get(0) + " " + children.get(1)
-									+ "<izraz_naredba> <izraz_naredba> <izraz> " + children.get(5) + " <naredba>";
+									+ " <izraz_naredba> <izraz_naredba> <izraz> " + children.get(5) + " <naredba>";
 			
 			ExpressionCommand expressionCommand1 = (ExpressionCommand) children.get(2);
 			

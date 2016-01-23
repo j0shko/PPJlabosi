@@ -31,7 +31,7 @@ public class CastExpression extends TreeNode implements ICheckable {
 			lExpression = unaryExpression.islExpression();
 		} else {
 			// L_ZAGRADA <ime_tipa> D_ZAGRADA <cast_izraz>
-			String errorMessage = "<cast_izraz> ::=  "+ children.get(0) + " <ime_tipa> " 
+			String errorMessage = "<cast_izraz> ::= "+ children.get(0) + " <ime_tipa> " 
 									+ children.get(2) + " <cast_izraz>";
 			
 			TypeName typeName = (TypeName) children.get(1);
