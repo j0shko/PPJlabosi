@@ -89,6 +89,9 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 			case "IDN":
 				String indetificatorType = Checker.getTypeForName(value);
 				type = indetificatorType;
+				if (Initialisator.initialisatorCalled) {
+					Initialisator.expression = true;
+				}
 				if (Checker.isFunction(type)) {
 					GeneratorKoda.lines.add("\tCALL F_" + value.toUpperCase());
 					GeneratorKoda.lines.add("\tPUSH R6");
@@ -125,6 +128,14 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				
 				break;
 			case "ZNAK":
+				int numericalValue = (int) value.charAt(1);
+				if (Initialisator.initialisatorCalled && !Initialisator.expression) {
+					Initialisator.value = Integer.toString(numericalValue);
+				} else {
+					GeneratorKoda.lines.add("\tMOVE %D "+ numericalValue +", R0");
+					GeneratorKoda.lines.add("\tPUSH R0");
+				}
+				
 				type = "char";
 				lExpression = false;
 				break;

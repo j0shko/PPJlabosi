@@ -8,6 +8,7 @@ public class Initialisator extends TreeNode implements ICheckable, IGeneratable 
 	public static boolean initialisatorCalled = false;
 	
 	public static String value = null;
+	public static boolean expression = false;
 	
 	private String type;
 	

@@ -59,6 +59,10 @@ public class AditiveExpression extends TreeNode implements ICheckable, IGenerata
 			multiplicativeExpression.generateCode();
 		} else {
 			// <aditivni_izraz> (PLUS | MINUS) <multiplikativni_izraz>
+			if (Initialisator.initialisatorCalled) {
+				Initialisator.expression = true;
+			}
+			
 			AditiveExpression aditiveExpression = (AditiveExpression) children.get(0);
 			
 			aditiveExpression.generateCode();
@@ -67,17 +71,16 @@ public class AditiveExpression extends TreeNode implements ICheckable, IGenerata
 			
 			multiplicativeExpression.generateCode();
 			
+			GeneratorKoda.lines.add("\tPOP R0"); // load multiplicativeExpression result
+			GeneratorKoda.lines.add("\tPOP R1"); // load aditiveExpression result
+
 			if (children.get(1).getData().getName().equals("PLUS")) {
-				GeneratorKoda.lines.add("\tPOP R0"); // load multiplicativeExpression result
-				GeneratorKoda.lines.add("\tPOP R1"); // load aditiveExpression result
 				GeneratorKoda.lines.add("\tADD R1, R0, R0");
-				GeneratorKoda.lines.add("\tPUSH R0");
 			} else {
-				GeneratorKoda.lines.add("\tPOP R0"); // load multiplicativeExpression result
-				GeneratorKoda.lines.add("\tPOP R1"); // load aditiveExpression result
 				GeneratorKoda.lines.add("\tSUB R1, R0, R0");
-				GeneratorKoda.lines.add("\tPUSH R0");
+			
 			}
+			GeneratorKoda.lines.add("\tPUSH R0");
 		}
 	}
 

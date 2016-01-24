@@ -84,8 +84,16 @@ public class InitDeclarator extends TreeNode implements ICheckable, IGeneratable
 			String name = DirectDeclarator.lastName;
 			if (name != null) {
 				Scope.IdentificatorData identificator = Scope.currentScope.getIdentificator(name);
-				identificator.setDefaultValue(Initialisator.value);
 				
+				if (Initialisator.expression) {
+					GeneratorKoda.lines.add("\tPOP R0");
+					GeneratorKoda.lines.add("\tSTORE R0, (" + identificator.getLabel() + ")");
+					Initialisator.expression = false;
+				} else {
+					identificator.setDefaultValue(Initialisator.value);
+				}
+				
+				Initialisator.value = null;
 				DirectDeclarator.lastName = null;
 			}
 		}

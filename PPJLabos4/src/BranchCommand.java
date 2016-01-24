@@ -1,7 +1,7 @@
 import java.util.List;
 
 
-public class BranchCommand extends TreeNode implements ICheckable {
+public class BranchCommand extends TreeNode implements ICheckable, IGeneratable {
 
 	public static int ifCounter = 0;
 	
@@ -64,4 +64,70 @@ public class BranchCommand extends TreeNode implements ICheckable {
 
 	}
 
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 5) {
+			// KR_IF L_ZAGRADA <izraz> D_ZAGRADA <naredba>
+			String label = "IF" + ifCounter;
+			ifCounter++;
+			
+			Expression expression = (Expression) children.get(2);
+			
+			expression.generateCode();
+			GeneratorKoda.lines.add("\tPOP R0");
+			GeneratorKoda.lines.add("\tCMP R0, 0");
+			GeneratorKoda.lines.add("\tJP_Z " + label);
+
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, label);
+			parentScope.addChildScope(Scope.currentScope);
+			
+			Command command = (Command) children.get(4);
+			
+			command.generateCode();
+			
+			GeneratorKoda.lines.add(label + "\tMOVE R0, R0");
+			
+			Scope.currentScope = parentScope;
+		} else {
+			// KR_IF L_ZAGRADA <izraz> D_ZAGRADA <naredba>1 KR_ELSE <naredba>2
+			String labelIf = "IF" + ifCounter;
+			String labelElse = "ELSE" + ifCounter;
+			ifCounter++;
+			
+			Expression expression = (Expression) children.get(2);
+			
+			expression.generateCode();
+			
+			GeneratorKoda.lines.add("\tPOP R0");
+			GeneratorKoda.lines.add("\tCMP R0, 0");
+			GeneratorKoda.lines.add("\tJP_Z " + labelIf);
+			
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, labelIf);
+			parentScope.addChildScope(Scope.currentScope);
+			
+			Command command1 = (Command) children.get(4);
+			
+			command1.generateCode();
+			
+			GeneratorKoda.lines.add("\tJP " + labelElse);
+			
+			GeneratorKoda.lines.add(labelIf + "\tMOVE R0, R0");
+			Scope.currentScope = parentScope;
+			
+			parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, labelElse);
+			parentScope.addChildScope(Scope.currentScope);
+			
+			Command command2 = (Command) children.get(6);
+						
+			command2.generateCode();
+			
+			GeneratorKoda.lines.add(labelElse + " \tMOVE R0, R0");
+			
+			Scope.currentScope = parentScope;
+		}
+	}
 }

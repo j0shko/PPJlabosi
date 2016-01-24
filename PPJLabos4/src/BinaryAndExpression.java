@@ -61,6 +61,10 @@ public class BinaryAndExpression extends TreeNode implements ICheckable, IGenera
 			equalsExpression.generateCode();
 		} else {
 			// <bin_i_izraz> OP_BIN_I <jednakosni_izraz>
+			if (Initialisator.initialisatorCalled) {
+				Initialisator.expression = true;
+			}
+			
 			BinaryAndExpression binaryAndExpression = (BinaryAndExpression) children.get(0);
 			
 			binaryAndExpression.generateCode();
