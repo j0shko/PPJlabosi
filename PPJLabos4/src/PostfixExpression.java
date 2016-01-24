@@ -8,6 +8,9 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 	
 	private static long index = 0L;
 	
+	public static boolean isPostfix = false;
+	public static int addNum = 0;
+	
 	public PostfixExpression(TreeNodeData data) {
 		super(data);
 	}
@@ -125,7 +128,13 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 			
 			PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 			
+			String operator = children.get(1).getData().getName();
+			
+			isPostfix = true;
+			addNum = operator.equals("OP_INC") ? 1 : -1; 
 			postfixExpression.generateCode();
+			addNum = 0;
+			isPostfix = false;
 			
 			type = "int";
 			lExpression = false;

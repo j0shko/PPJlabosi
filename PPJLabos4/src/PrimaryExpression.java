@@ -7,6 +7,8 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 	
 	private static int labelCounter = 0;
 	
+	public static boolean pushResult = false;
+	
 	public PrimaryExpression(TreeNodeData data) {
 		super(data);
 	}
@@ -94,6 +96,7 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				}
 				if (AssignmentExpression.isAssignment) {
 					AssignmentExpression.identificatorName = value;
+					AssignmentExpression.index = Scope.index;
 				} else {
 					if (Checker.isFunction(type)) {
 						GeneratorKoda.lines.add("\tCALL F_" + value.toUpperCase());
@@ -111,7 +114,8 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 //							address += " + R3";
 //						}
 						if (Scope.hasIndex && Scope.index > 0) {
-							address += " + " + Scope.index * 4;
+							GeneratorKoda.lines.add("\tMOVE " + address + ", R4");
+							address = "R4 + " + Scope.index * 4;
 						}
 						
 						GeneratorKoda.lines.add("\tLOAD R0, (" + address + ")");
@@ -122,7 +126,14 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 							GeneratorKoda.lines.add("\tSTORE R0, (" + address + ")");
 						}	
 						
-						GeneratorKoda.lines.add("\tPUSH R0");
+						if (pushResult) {
+							GeneratorKoda.lines.add("\tPUSH R0");
+						}
+							
+						if (PostfixExpression.isPostfix) {
+							GeneratorKoda.lines.add("\tADD R0, " + PostfixExpression.addNum + ", R0");
+							GeneratorKoda.lines.add("\tSTORE R0, (" + address + ")");
+						}
 //						if (Scope.hasIndex) {
 //							GeneratorKoda.lines.add("\tPOP R3");
 //						}

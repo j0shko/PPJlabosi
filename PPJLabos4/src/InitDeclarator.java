@@ -69,7 +69,7 @@ public class InitDeclarator extends TreeNode implements ICheckable, IGeneratable
 			DirectDeclarator directDeclarator = (DirectDeclarator) children.get(0);
 			directDeclarator.setnType(nType);
 			
-			directDeclarator.check();
+			directDeclarator.generateCode();
 		} else {
 			// <izravni_deklarator> OP_PRIDRUZI <inicijalizator>
 			DirectDeclarator directDeclarator = (DirectDeclarator) children.get(0);
@@ -79,7 +79,9 @@ public class InitDeclarator extends TreeNode implements ICheckable, IGeneratable
 			
 			Initialisator initialisator = (Initialisator) children.get(2);
 			
+			PrimaryExpression.pushResult = true;
 			initialisator.generateCode();
+			PrimaryExpression.pushResult = false;
 			
 			String name = DirectDeclarator.lastName;
 			if (name != null) {

@@ -74,7 +74,10 @@ public class BranchCommand extends TreeNode implements ICheckable, IGeneratable 
 			
 			Expression expression = (Expression) children.get(2);
 			
+			PrimaryExpression.pushResult = true;
 			expression.generateCode();
+			PrimaryExpression.pushResult = false;
+			
 			GeneratorKoda.lines.add("\tPOP R0");
 			GeneratorKoda.lines.add("\tCMP R0, 0");
 			GeneratorKoda.lines.add("\tJP_Z " + label);
@@ -98,7 +101,9 @@ public class BranchCommand extends TreeNode implements ICheckable, IGeneratable 
 			
 			Expression expression = (Expression) children.get(2);
 			
+			PrimaryExpression.pushResult = true;
 			expression.generateCode();
+			PrimaryExpression.pushResult = false;
 			
 			GeneratorKoda.lines.add("\tPOP R0");
 			GeneratorKoda.lines.add("\tCMP R0, 0");

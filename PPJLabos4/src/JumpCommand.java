@@ -52,7 +52,9 @@ public class JumpCommand extends TreeNode implements ICheckable, IGeneratable {
 			// KR_RETURN <izraz> TOCKAZAREZ
 			Expression expression = (Expression) children.get(1);
 			
+			PrimaryExpression.pushResult = true;
 			expression.generateCode();
+			PrimaryExpression.pushResult = false;
 			
 			GeneratorKoda.lines.add("\tPOP R6");
 			GeneratorKoda.lines.add("\tRET");

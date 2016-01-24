@@ -22,7 +22,6 @@ public class OuterDeclaration extends TreeNode implements ICheckable, IGeneratab
 		List<TreeNode> children = getChildren();
 		IGeneratable command = (IGeneratable) children.get(0);
 				
-		//TODO razlikovati ova dva sranja
 		command.generateCode();
 	}
 }

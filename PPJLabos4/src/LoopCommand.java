@@ -97,17 +97,32 @@ public class LoopCommand extends TreeNode implements ICheckable, IGeneratable {
 			// KR_WHILE L_ZAGRADA <izraz> D_ZAGRADA <naredba>
 			Expression expression = (Expression) children.get(2);
 			
-			expression.check();
+			String label = "WHILE" + loopCount;
+			loopCount++;
+			String labelBegin = label + "B";
+			String labelEnd = label + "E";
+			GeneratorKoda.lines.add(labelBegin + "\tMOVE R0, R0");
+			
+			PrimaryExpression.pushResult = true;
+			expression.generateCode();
+			PrimaryExpression.pushResult = false;
+			
+			GeneratorKoda.lines.add("\tPOP R0");
+			GeneratorKoda.lines.add("\tCMP R0, 0");
+			GeneratorKoda.lines.add("\tJP_Z " + labelEnd);
 			
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope, "WHILE" + loopCount);
+			Scope.currentScope = new Scope(parentScope, label);
 			loopCount++;
 			parentScope.addChildScope(Scope.currentScope);
 			Scope.currentScope.setLoop(true);
 			
 			Command command = (Command) children.get(4);
 			
-			command.check();
+			command.generateCode();
+			
+			GeneratorKoda.lines.add("\tJP " + labelBegin);
+			GeneratorKoda.lines.add(labelEnd + "\tMOVE R0, R0");
 			
 			Scope.currentScope = parentScope;
 		} else if (children.size() == 6) {
@@ -158,7 +173,9 @@ public class LoopCommand extends TreeNode implements ICheckable, IGeneratable {
 			String labelEnd = label + "E";
 			GeneratorKoda.lines.add(labelBegin + "\tMOVE R0, R0");
 			
+			PrimaryExpression.pushResult = true;
 			expressionCommand2.generateCode();
+			PrimaryExpression.pushResult = false;
 			
 			GeneratorKoda.lines.add("\tPOP R0");
 			GeneratorKoda.lines.add("\tCMP R0, 0");
@@ -166,10 +183,8 @@ public class LoopCommand extends TreeNode implements ICheckable, IGeneratable {
 			
 			Expression expression = (Expression) children.get(4);
 			
+			PrimaryExpression.pushResult = false;
 			expression.generateCode();
-			
-			//TODO pazi na ovo bokte nedo
-			GeneratorKoda.lines.add("\tPOP R0");
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope, "FOR" + loopCount);

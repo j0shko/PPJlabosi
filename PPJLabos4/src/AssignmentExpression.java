@@ -7,6 +7,7 @@ public class AssignmentExpression extends TreeNode implements ICheckable, IGener
 	
 	public static boolean isAssignment = false;
 	public static String identificatorName;
+	public static long index = 0;
 	
 	public AssignmentExpression(TreeNodeData data) {
 		super(data);
@@ -74,9 +75,19 @@ public class AssignmentExpression extends TreeNode implements ICheckable, IGener
 			Scope.IdentificatorData identificator = Checker.getIdentificator(identificatorName);
 			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
 			
+			PrimaryExpression.pushResult = true;
 			assignmentExpression.generateCode();
+			PrimaryExpression.pushResult = false;
+			
+			String address = identificator.getLabel();
+			
 			GeneratorKoda.lines.add("\tPOP R0");
-			GeneratorKoda.lines.add("\tSTORE R0, (" + identificator.getLabel() + ")");
+			
+			if (index > 0) {
+				GeneratorKoda.lines.add("\tMOVE " + address + ", R4");
+				address = "R4 + " + Scope.index * 4;
+			}
+			GeneratorKoda.lines.add("\tSTORE R0, (" + address + ")");
 			
 			identificatorName = null;
 		}

@@ -122,16 +122,10 @@ public class DirectDeclarator extends TreeNode implements ICheckable, IGeneratab
 		} else {
 			if (children.get(1).getData().getName().equals("L_UGL_ZAGRADA")) {
 				// IDN L_UGL_ZAGRADA BROJ D_UGL_ZAGRADA
-				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)
-										+ " " + children.get(2) + " " + children.get(3);
-					
-				Checker.throwException(!nType.equals("void"), errorMessage);
 						
 				String name = ((TerminalSignData) children.get(0).getData()).getValue();
-				Checker.throwException(!Checker.isNameDeclaredLocaly(name), errorMessage);
 				
 				String sizeNumber = ((TerminalSignData) children.get(2).getData()).getValue();
-				Checker.throwException(Checker.checkArraySizeInteger(sizeNumber), errorMessage);
 				
 				elementCount = Checker.getNumberValue(sizeNumber);
 				

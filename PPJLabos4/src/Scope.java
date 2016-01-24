@@ -3,9 +3,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-
-
 public class Scope {
 	public static Scope currentScope;
 	public static Scope globalScope;
@@ -70,6 +67,12 @@ public class Scope {
 		
 		public void setSize(long size) {
 			this.size = size;
+			if (this.array.size() < size) {
+				long difference = size - array.size();
+				for (int i = 0; i < difference; i++) {
+					array.add("0");
+				}
+			}
 		}
 		
 		public void setArray(List<String> array) {
@@ -205,7 +208,7 @@ public class Scope {
 	
 	public void generateDefinitionLines() {
 		for (IdentificatorData identificator : identificatorMap.values()) {
-			if (identificator.getArray().size() == 1) {
+			if (identificator.getArray().size() <=1) {
 				int value = Integer.parseInt(identificator.defaultValue);
 				GeneratorKoda.lines.add(identificator.label + "\t" + "DW %D " + value);
 			} else {
