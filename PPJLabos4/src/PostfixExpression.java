@@ -115,28 +115,39 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 			PrimaryExpression primaryExpression = (PrimaryExpression) children.get(0);
 			
 			primaryExpression.generateCode();
+			
+			type = primaryExpression.getType();
+			lExpression = primaryExpression.islExpression();
 		} else if (children.size() == 2) {
 			// <postfiks_izraz> (OP_INC | OP_DEC)
 			
 			PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 			
 			postfixExpression.generateCode();
+			
+			type = "int";
+			lExpression = false;
 		} else if (children.size() == 3) {
 			// <postfiks_izraz> L_ZAGRADA D_ZAGRADA
 			
 			PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 			
 			postfixExpression.generateCode();
+			
+			type = Checker.getFunctionReturnValue(postfixExpression.getType());
+			lExpression = false;
 		} else if (children.size() == 4) {
 			if (children.get(1).getData().getName().equals("L_ZAGRADA")) {
 				// <postfiks_izraz> L_ZAGRADA <lista_argumenata> D_ZAGRADA
 				
 				PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 				
-				postfixExpression.generateCode();
-				
 				ArgumentList argumentList = (ArgumentList) children.get(2);
 				argumentList.generateCode();
+				
+				postfixExpression.generateCode();
+				type = Checker.getFunctionReturnValue(postfixExpression.getType());
+				lExpression = false;
 			} else {
 				// <postfiks_izraz> L_UGL_ZAGRADA <izraz> D_UGL_ZAGRADA
 				

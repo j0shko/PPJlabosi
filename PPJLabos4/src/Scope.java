@@ -26,7 +26,7 @@ public class Scope {
 		private String type;
 		private boolean lExpression;
 		
-		private String defaultValue = null;
+		private String defaultValue = "0";
 		private String label;
 		
 		public IdentificatorData(String name, String type, boolean lExpression, String label) {
@@ -184,6 +184,11 @@ public class Scope {
 			if (identificator.type == "int" || identificator.type == "(const)int") {
 				int value = Integer.parseInt(identificator.defaultValue);
 				GeneratorKoda.lines.add(identificator.label + "\t" + "DW %D " + value);
+			}
+		}
+		if (!childScopes.isEmpty()) {
+			for (Scope scope : childScopes) {
+				scope.generateDefinitionLines();
 			}
 		}
 	}

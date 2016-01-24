@@ -108,10 +108,12 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 			typeName.generateCode();
 			
 			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
-			functionName = functionName.toUpperCase();
 			String functionType = "f(void->" + typeName.getType() + ")";
+			Scope.currentScope.addFunction(functionName, functionType, true);
+			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
 			
-			GeneratorKoda.lines.add("F_" + functionName + "\tMOVE R0,R0");
+			functionName = functionName.toUpperCase();
+			GeneratorKoda.lines.add("F_" + functionName + "\tMOVE R0, R0");
 			
 			Scope parentScope = Scope.currentScope;
 			Scope.currentScope = new Scope(parentScope, "F_" + functionName.toUpperCase());
@@ -122,10 +124,59 @@ public class FunctionDefinition extends TreeNode implements ICheckable, IGenerat
 			ComplexCommand complexCommand = (ComplexCommand) children.get(5);
 			
 			complexCommand.generateCode();
+			
+			Scope.currentScope = parentScope;
 		} else {
 			// <ime_tipa> IDN L_ZAGRADA <lista_parametara> D_ZAGRADA <slozena_naredba>
+			TypeName typeName = (TypeName) children.get(0);
 			
-			//TODO rješi
+			typeName.generateCode();
+			
+			String functionName = ((TerminalSignData) children.get(1).getData()).getValue();
+			
+			ParameterList parameterList = (ParameterList) children.get(3);
+			
+			parameterList.generateCode();
+			
+			StringBuffer functionTypeBuffer = new StringBuffer("f(");
+			for (ParameterList.Parameter parameter : parameterList.getParameters()) {
+				functionTypeBuffer.append(parameter.getType());
+				functionTypeBuffer.append(",");
+			}
+			functionTypeBuffer.deleteCharAt(functionTypeBuffer.length() - 1);
+			functionTypeBuffer.append("->").append(typeName.getType()).append(")");
+			String functionType = functionTypeBuffer.toString();
+			
+			
+			Scope.currentScope.addFunction(functionName, functionType, true);
+			Checker.setFunctionDefinition(functionName, functionType, Scope.currentScope);
+			
+			Scope parentScope = Scope.currentScope;
+			Scope.currentScope = new Scope(parentScope, "F_" + functionName.toUpperCase());
+			parentScope.addChildScope(Scope.currentScope);
+			Scope.currentScope.setFunction(true);
+			Scope.currentScope.setFunctionType(functionType);
+			
+			functionName = functionName.toUpperCase();
+			GeneratorKoda.lines.add("F_" + functionName + "\tPOP R5");
+			
+			for (ParameterList.Parameter parameter : parameterList.getParameters()) {
+				Scope.currentScope.addIdentificator(parameter.getName(), parameter.getType(), true);
+			}
+			
+			for (int i = parameterList.getParameters().size()-1, end = 0 ; i >= end; i--) {
+				GeneratorKoda.lines.add("\tPOP R0");
+				String label = Scope.currentScope.getScopeName().toUpperCase() + "_" 
+									+ parameterList.getParameters().get(i).getName().toUpperCase();
+				GeneratorKoda.lines.add("\tSTORE R0, (" + label + ")");
+			}
+			
+			GeneratorKoda.lines.add("\tPUSH R5");
+			ComplexCommand complexCommand = (ComplexCommand) children.get(5);
+			
+			complexCommand.generateCode();
+			
+			Scope.currentScope = parentScope;
 		}
 	}
 }

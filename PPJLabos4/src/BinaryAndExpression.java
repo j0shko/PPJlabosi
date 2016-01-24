@@ -68,6 +68,11 @@ public class BinaryAndExpression extends TreeNode implements ICheckable, IGenera
 			EqualsExpression equalsExpression = (EqualsExpression) children.get(2);
 			
 			equalsExpression.generateCode();
+			
+			GeneratorKoda.lines.add("\tPOP R0"); // load equalsExpression result
+			GeneratorKoda.lines.add("\tPOP R1"); // load binaryAndExpression result
+			GeneratorKoda.lines.add("\tAND R1, R0, R0");
+			GeneratorKoda.lines.add("\tPUSH R0");
 		}
 	}
 }

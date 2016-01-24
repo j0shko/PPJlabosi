@@ -68,6 +68,11 @@ public class BinaryXorExpression extends TreeNode implements ICheckable, IGenera
 			BinaryAndExpression binaryAndExpression = (BinaryAndExpression) children.get(2);
 			
 			binaryAndExpression.generateCode();
+			
+			GeneratorKoda.lines.add("\tPOP R0"); // load binaryAndExpression result
+			GeneratorKoda.lines.add("\tPOP R1"); // load binaryXorExpression result
+			GeneratorKoda.lines.add("\tXOR R1, R0, R0");
+			GeneratorKoda.lines.add("\tPUSH R0");
 		}
 	}
 }

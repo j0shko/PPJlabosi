@@ -36,7 +36,7 @@ public class Command extends TreeNode implements ICheckable, IGeneratable {
 		
 		if (children.get(0).getData().getName().equals("<slozena_naredba>")) {
 			Scope parentScope = Scope.currentScope;
-			Scope.currentScope = new Scope(parentScope, "CPXCMD" + complexCommandCount + "_");
+			Scope.currentScope = new Scope(parentScope, "CPXCMD" + complexCommandCount);
 			parentScope.addChildScope(Scope.currentScope);
 			
 			command.generateCode();

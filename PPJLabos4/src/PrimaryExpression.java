@@ -90,6 +90,8 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				String indetificatorType = Checker.getTypeForName(value);
 				type = indetificatorType;
 				if (Checker.isFunction(type)) {
+					GeneratorKoda.lines.add("\tCALL F_" + value.toUpperCase());
+					GeneratorKoda.lines.add("\tPUSH R6");
 					lExpression = false;
 				} else {
 					Scope.IdentificatorData identificator = Checker.getIdentificator(value);

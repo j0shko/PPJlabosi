@@ -43,7 +43,7 @@ public class JumpCommand extends TreeNode implements ICheckable, IGeneratable {
 		if (children.size() == 2) {
 			if (children.get(0).getData().getName().equals("KR_RETURN")) {
 				// KR_RETURN TOCKAZAREZ
-				// TODO rješi
+				GeneratorKoda.lines.add("\tRET");
 			} else {
 				// (KR_CONTINUE | KR_BREAK) TOCKAZAREZ
 				// TODO rješi

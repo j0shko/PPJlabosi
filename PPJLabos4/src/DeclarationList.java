@@ -28,7 +28,21 @@ public class DeclarationList extends TreeNode implements ICheckable, IGeneratabl
 	
 	@Override
 	public void generateCode() {
-		// TODO Auto-generated method stub
-		
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <deklaracija>
+			Declaration declaration = (Declaration) children.get(0);
+			
+			declaration.generateCode();
+		} else {
+			// <lista_deklaracija> <deklaracija>
+			DeclarationList declarationList = (DeclarationList) children.get(0);
+			
+			declarationList.generateCode();
+			
+			Declaration declaration = (Declaration) children.get(1);
+			
+			declaration.generateCode();
+		}
 	}
 }

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParameterList extends TreeNode implements ICheckable {
+public class ParameterList extends TreeNode implements ICheckable, IGeneratable {
 
 	private List<Parameter> parameters = new ArrayList<>();
 	
@@ -74,4 +74,29 @@ public class ParameterList extends TreeNode implements ICheckable {
 		}
 	}
 
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <deklaracija_parametra>
+			
+			ParameterDeclaration parameterDeclaration = (ParameterDeclaration) children.get(0);
+			
+			parameterDeclaration.generateCode();
+			
+			parameters.add(new Parameter(parameterDeclaration.getName(), parameterDeclaration.getType()));
+		} else {
+			// <lista_parametara> ZAREZ <deklaracija_parametra>
+			ParameterList parameterList = (ParameterList) children.get(0);
+			
+			parameterList.generateCode();
+			
+			ParameterDeclaration parameterDeclaration = (ParameterDeclaration) children.get(2);
+			
+			parameterDeclaration.generateCode();
+			
+			parameters.addAll(parameterList.getParameters());
+			parameters.add(new Parameter(parameterDeclaration.getName(), parameterDeclaration.getType()));
+		}
+	}
 }

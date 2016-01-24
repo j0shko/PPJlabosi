@@ -38,7 +38,25 @@ public class ArgumentList extends TreeNode implements ICheckable, IGeneratable {
 
 	@Override
 	public void generateCode() {
-		// TODO Auto-generated method stub
+		List<TreeNode> children = getChildren();
 		
+		if (children.size() == 1) {
+			// <izraz_pridruzivanja> 
+			
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(0);
+			assignmentExpression.generateCode();
+			
+			types.add(assignmentExpression.getType());
+		} else {
+			// <lista_argumenata> ZAREZ <izraz_pridruzivanja>
+			
+			ArgumentList argumentList = (ArgumentList) children.get(0);
+			argumentList.generateCode();
+			
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
+			assignmentExpression.generateCode();
+			types.addAll(argumentList.getTypes());
+			types.add(assignmentExpression.getType());
+		}
 	}
 }
