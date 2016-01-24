@@ -6,6 +6,8 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 	private String type;
 	private boolean lExpression;
 	
+	private static long index = 0L;
+	
 	public PostfixExpression(TreeNodeData data) {
 		super(data);
 	}
@@ -146,17 +148,23 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 				argumentList.generateCode();
 				
 				postfixExpression.generateCode();
+				
 				type = Checker.getFunctionReturnValue(postfixExpression.getType());
 				lExpression = false;
 			} else {
 				// <postfiks_izraz> L_UGL_ZAGRADA <izraz> D_UGL_ZAGRADA
-				
-				PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
-				
-				postfixExpression.generateCode();
-				
+				Scope.hasIndex = true;
 				Expression expression = (Expression) children.get(2);
 				expression.generateCode();
+				
+
+				
+				PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
+				postfixExpression.generateCode();
+				
+				Scope.hasIndex = false;
+				
+
 			}
 		}
 	}

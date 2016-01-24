@@ -102,21 +102,40 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 					} else {
 						Scope.IdentificatorData identificator = Checker.getIdentificator(value);
 						lExpression = identificator.islExpression(); 
-						GeneratorKoda.lines.add("\tLOAD R0, (" + identificator.getLabel()+ ")");
+						
+						String address = identificator.getLabel();
+//						if (Scope.hasIndex) {
+//							GeneratorKoda.lines.add("\tPUSH R3");
+//							GeneratorKoda.lines.add("\tMOVE R0, R3");
+//							GeneratorKoda.lines.add("\tSHL R0, 2");
+//							address += " + R3";
+//						}
+						if (Scope.hasIndex && Scope.index > 0) {
+							address += " + " + Scope.index * 4;
+						}
+						
+						GeneratorKoda.lines.add("\tLOAD R0, (" + address + ")");
 						
 						//ako je ++i
 						if (UnaryExpression.isPrefix) {
 							GeneratorKoda.lines.add("\tADD R0, " + UnaryExpression.addNum + ", R0");
-							GeneratorKoda.lines.add("\tSTORE R0, (" + identificator.getLabel() + ")");
+							GeneratorKoda.lines.add("\tSTORE R0, (" + address + ")");
 						}	
 						
 						GeneratorKoda.lines.add("\tPUSH R0");
+//						if (Scope.hasIndex) {
+//							GeneratorKoda.lines.add("\tPOP R3");
+//						}
 					}
 				}
 				
 				break;
 			case "BROJ":
 				int num = Checker.getNumberValue(value);
+				if (Scope.hasIndex) {
+					Scope.index = num;
+					break;
+				}
 				if (UnaryOperator.negated != null && UnaryOperator.negated == true) {
 					num *= -1;
 					UnaryOperator.negated = null;
@@ -124,6 +143,7 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				
 				if (Initialisator.initialisatorCalled) {
 					Initialisator.value = Integer.toString(num);
+					Initialisator.array.add(Integer.toString(num));
 				} else {
 					if (num > 524287 || num < -524288) {
 						String label = "HELPNUM" + labelCounter;
@@ -142,6 +162,7 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				int numericalValue = (int) value.charAt(1);
 				if (Initialisator.initialisatorCalled && !Initialisator.expression) {
 					Initialisator.value = Integer.toString(numericalValue);
+					Initialisator.array.add(Integer.toString(numericalValue));
 				} else {
 					GeneratorKoda.lines.add("\tMOVE %D "+ numericalValue +", R0");
 					GeneratorKoda.lines.add("\tPUSH R0");

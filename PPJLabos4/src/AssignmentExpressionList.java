@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AssignmentExpressionList extends TreeNode implements ICheckable {
+public class AssignmentExpressionList extends TreeNode implements ICheckable, IGeneratable {
 
 	private List<String> types = new ArrayList<>();
 	
@@ -39,6 +39,33 @@ public class AssignmentExpressionList extends TreeNode implements ICheckable {
 			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
 			
 			assignmentExpression.check();
+			
+			types.addAll(assignmentExpressionList.getTypes());
+			types.add(assignmentExpression.getType());
+		}
+	}
+
+	@Override
+	public void generateCode() {
+		List<TreeNode> children = getChildren();
+		if (children.size() == 1) {
+			// <izraz_pridruzivanja>
+			
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(0);
+			
+			assignmentExpression.generateCode();
+			
+			types.add(assignmentExpression.getType());
+		} else {
+			// <lista_izraza_pridruzivanja> ZAREZ <izraz_pridruzivanja>
+			
+			AssignmentExpressionList assignmentExpressionList = (AssignmentExpressionList) children.get(0);
+			
+			assignmentExpressionList.generateCode();
+			
+			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
+			
+			assignmentExpression.generateCode();
 			
 			types.addAll(assignmentExpressionList.getTypes());
 			types.add(assignmentExpression.getType());

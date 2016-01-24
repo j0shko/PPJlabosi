@@ -137,6 +137,9 @@ public class DirectDeclarator extends TreeNode implements ICheckable, IGeneratab
 				
 				this.type = nType + "[]";
 				Scope.currentScope.addIdentificator(name, type, false);
+				
+				Scope.currentScope.getIdentificator(name).setSize(elementCount);
+				lastName = name;
 			} else if (children.get(2).getData().getName().equals("KR_VOID")) {
 				// IDN L_ZAGRADA KR_VOID D_ZAGRADA
 				String errorMessage = "<izravni_deklarator> ::= " + children.get(0) + " " + children.get(1)

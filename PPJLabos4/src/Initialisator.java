@@ -8,6 +8,7 @@ public class Initialisator extends TreeNode implements ICheckable, IGeneratable 
 	public static boolean initialisatorCalled = false;
 	
 	public static String value = null;
+	public static List<String> array = new ArrayList<>();
 	public static boolean expression = false;
 	
 	private String type;
@@ -82,7 +83,9 @@ public class Initialisator extends TreeNode implements ICheckable, IGeneratable 
 			
 			AssignmentExpressionList assignmentExpressionList = (AssignmentExpressionList) children.get(1);
 			
-			assignmentExpressionList.check();
+			initialisatorCalled = true;
+			assignmentExpressionList.generateCode();
+			initialisatorCalled = false;
 			
 			types.addAll(assignmentExpressionList.getTypes());
 		}

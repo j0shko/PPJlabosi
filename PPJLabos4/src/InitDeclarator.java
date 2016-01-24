@@ -91,9 +91,11 @@ public class InitDeclarator extends TreeNode implements ICheckable, IGeneratable
 					Initialisator.expression = false;
 				} else {
 					identificator.setDefaultValue(Initialisator.value);
+					identificator.setArray(Initialisator.array);
 				}
 				
 				Initialisator.value = null;
+				Initialisator.array.clear();
 				DirectDeclarator.lastName = null;
 			}
 		}
