@@ -153,11 +153,16 @@ public class PostfixExpression extends TreeNode implements ICheckable, IGenerata
 				lExpression = false;
 			} else {
 				// <postfiks_izraz> L_UGL_ZAGRADA <izraz> D_UGL_ZAGRADA
+				Scope.hasIndex = true;
 				Expression expression = (Expression) children.get(2);
 				expression.generateCode();
 				
+
+				
 				PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 				postfixExpression.generateCode();
+				
+				Scope.hasIndex = false;
 				
 
 			}

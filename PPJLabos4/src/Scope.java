@@ -10,6 +10,9 @@ public class Scope {
 	public static Scope currentScope;
 	public static Scope globalScope;
 	
+	public static boolean hasIndex = false;
+	public static long index = 0L;
+	
 	private boolean isFunction;
 	private boolean isLoop;
 	
