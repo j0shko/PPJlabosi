@@ -6,7 +6,7 @@ public class RelationsExpression extends TreeNode implements ICheckable, IGenera
 	private String type;
 	private boolean lExpression;
 	
-	private static int relationsCounter = 0;
+	public static int relationsCounter = 0;
 	
 	public RelationsExpression(TreeNodeData data) {
 		super(data);

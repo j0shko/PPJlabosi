@@ -6,6 +6,9 @@ public class UnaryExpression extends TreeNode implements ICheckable, IGeneratabl
 	private String type;
 	private boolean lExpression;
 	
+	public static boolean isPrefix = false;
+	public static int addNum = 0;
+	
 	public UnaryExpression(TreeNodeData data) {
 		super(data);
 	}
@@ -81,7 +84,13 @@ public class UnaryExpression extends TreeNode implements ICheckable, IGeneratabl
 				// (OP_INC | OP_DEC) <unarni_izraz>
 				UnaryExpression unaryExpression = (UnaryExpression) children.get(1);
 				
+				String operator = children.get(0).getData().getName();
+				
+				isPrefix = true;
+				addNum = operator.equals("OP_INC") ? 1 : -1;
 				unaryExpression.generateCode();
+				addNum = 0;
+				isPrefix = false;
 			}
 		}
 	}

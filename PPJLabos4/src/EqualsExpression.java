@@ -67,6 +67,25 @@ public class EqualsExpression extends TreeNode implements ICheckable, IGeneratab
 			RelationsExpression relationsExpression = (RelationsExpression) children.get(2);
 			
 			relationsExpression.generateCode();
+			
+			GeneratorKoda.lines.add("\tPOP R0"); // load aditiveExpression result
+			GeneratorKoda.lines.add("\tPOP R1"); // load relationsExpression result
+			GeneratorKoda.lines.add("\tCMP R1, R0");
+			
+			String labelTrue = "REL_T" + RelationsExpression.relationsCounter;
+			String labelEnd = "REL_E" + RelationsExpression.relationsCounter;
+			RelationsExpression.relationsCounter ++;
+			String operation = children.get(1).getData().getName();
+			if (operation.equals("OP_EQ")) {
+				GeneratorKoda.lines.add("\tJP_EQ " + labelTrue);
+			} else {
+				GeneratorKoda.lines.add("\tJP_NE " + labelTrue);
+			}
+			
+			GeneratorKoda.lines.add("\tMOVE 0, R0");
+			GeneratorKoda.lines.add("\tJP " + labelEnd);
+			GeneratorKoda.lines.add(labelTrue + "\tMOVE 1, R0");
+			GeneratorKoda.lines.add(labelEnd + "\tPUSH R0");
 		}
 	}
 }

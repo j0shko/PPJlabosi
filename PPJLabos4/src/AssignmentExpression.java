@@ -5,6 +5,9 @@ public class AssignmentExpression extends TreeNode implements ICheckable, IGener
 	private String type;
 	private boolean lExpression;
 	
+	public static boolean isAssignment = false;
+	public static String identificatorName;
+	
 	public AssignmentExpression(TreeNodeData data) {
 		super(data);
 	}
@@ -64,11 +67,18 @@ public class AssignmentExpression extends TreeNode implements ICheckable, IGener
 			// <postfiks_izraz> OP_PRIDRUZI <izraz_pridruzivanja>
 			PostfixExpression postfixExpression = (PostfixExpression) children.get(0);
 			
+			isAssignment = true;
 			postfixExpression.generateCode();
+			isAssignment = false;
 			
+			Scope.IdentificatorData identificator = Checker.getIdentificator(identificatorName);
 			AssignmentExpression assignmentExpression = (AssignmentExpression) children.get(2);
 			
 			assignmentExpression.generateCode();
+			GeneratorKoda.lines.add("\tPOP R0");
+			GeneratorKoda.lines.add("\tSTORE R0, (" + identificator.getLabel() + ")");
+			
+			identificatorName = null;
 		}
 	}
 

@@ -92,15 +92,26 @@ public class PrimaryExpression extends TreeNode implements ICheckable, IGenerata
 				if (Initialisator.initialisatorCalled) {
 					Initialisator.expression = true;
 				}
-				if (Checker.isFunction(type)) {
-					GeneratorKoda.lines.add("\tCALL F_" + value.toUpperCase());
-					GeneratorKoda.lines.add("\tPUSH R6");
-					lExpression = false;
+				if (AssignmentExpression.isAssignment) {
+					AssignmentExpression.identificatorName = value;
 				} else {
-					Scope.IdentificatorData identificator = Checker.getIdentificator(value);
-					lExpression = identificator.islExpression(); 
-					GeneratorKoda.lines.add("\tLOAD R0, (" + identificator.getLabel()+ ")");
-					GeneratorKoda.lines.add("\tPUSH R0");
+					if (Checker.isFunction(type)) {
+						GeneratorKoda.lines.add("\tCALL F_" + value.toUpperCase());
+						GeneratorKoda.lines.add("\tPUSH R6");
+						lExpression = false;
+					} else {
+						Scope.IdentificatorData identificator = Checker.getIdentificator(value);
+						lExpression = identificator.islExpression(); 
+						GeneratorKoda.lines.add("\tLOAD R0, (" + identificator.getLabel()+ ")");
+						
+						//ako je ++i
+						if (UnaryExpression.isPrefix) {
+							GeneratorKoda.lines.add("\tADD R0, " + UnaryExpression.addNum + ", R0");
+							GeneratorKoda.lines.add("\tSTORE R0, (" + identificator.getLabel() + ")");
+						}	
+						
+						GeneratorKoda.lines.add("\tPUSH R0");
+					}
 				}
 				
 				break;
