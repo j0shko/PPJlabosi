@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+
 
 public class Scope {
 	public static Scope currentScope;
@@ -29,6 +31,9 @@ public class Scope {
 		private String defaultValue = "0";
 		private String label;
 		
+		private List<String> array = new ArrayList<>();
+		private long size = 0L;
+		
 		public IdentificatorData(String name, String type, boolean lExpression, String label) {
 			this.name = name;
 			this.type = type;
@@ -54,6 +59,22 @@ public class Scope {
 		
 		public String getDefaultValue() {
 			return defaultValue;
+		}
+		
+		public long getSize() {
+			return size;
+		}
+		
+		public void setSize(long size) {
+			this.size = size;
+		}
+		
+		public void setArray(List<String> array) {
+			this.array = new ArrayList<>(array);
+		}
+		
+		public List<String> getArray() {
+			return array;
 		}
 		
 		public String getLabel() {
@@ -181,8 +202,22 @@ public class Scope {
 	
 	public void generateDefinitionLines() {
 		for (IdentificatorData identificator : identificatorMap.values()) {
-			int value = Integer.parseInt(identificator.defaultValue);
-			GeneratorKoda.lines.add(identificator.label + "\t" + "DW %D " + value);
+			if (identificator.getArray().size() == 1) {
+				int value = Integer.parseInt(identificator.defaultValue);
+				GeneratorKoda.lines.add(identificator.label + "\t" + "DW %D " + value);
+			} else {
+				String label = new String(identificator.label);
+				for (String arrayValue : identificator.getArray()) {
+					int value = Integer.parseInt(arrayValue);
+					GeneratorKoda.lines.add(label + "\t" + "DW %D " + value);
+					label = "";
+				}
+				if (identificator.getArray().size() < identificator.getSize()) {
+					for (int i = 0; i < identificator.getSize() - identificator.getArray().size(); ++i) {
+						GeneratorKoda.lines.add("\t" + "DW 0");
+					}
+				}
+			}
 		}
 		if (!childScopes.isEmpty()) {
 			for (Scope scope : childScopes) {
